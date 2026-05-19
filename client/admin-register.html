@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Owner Account — Sari-Sari Store</title>
+    <meta name="description" content="One-time admin/owner account registration for the Sari-Sari Store system.">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="card-wrapper">
+    <div class="store-logo">
+        <span class="logo-icon">👑</span>
+        <h1>Create Owner Account</h1>
+        <p>This can only be done once</p>
+    </div>
+
+    <!-- Locked state (shown if admin already exists) -->
+    <div class="panel" id="lockedPanel">
+        <div class="alert-box error" style="display:block;">
+            🔒 An admin account already exists. This registration page is locked.
+        </div>
+        <div class="btn-group">
+            <button class="btn-primary" onclick="window.location.href='admin-login.html'">Go to Admin Login</button>
+        </div>
+    </div>
+
+    <!-- Registration form -->
+    <div class="panel active" id="adminRegPanel">
+        <div class="admin-badge">⭐ One-Time Setup</div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="aRegFirst">First Name *</label>
+                <input type="text" id="aRegFirst" placeholder="First name">
+            </div>
+            <div class="form-group">
+                <label for="aRegMiddle">Middle Name</label>
+                <input type="text" id="aRegMiddle" placeholder="Middle name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="aRegLast">Last Name *</label>
+            <input type="text" id="aRegLast" placeholder="Last name">
+        </div>
+        <div class="form-group">
+            <label for="aRegAddress">Address *</label>
+            <input type="text" id="aRegAddress" placeholder="Full address">
+        </div>
+        <div class="form-group">
+            <label for="aRegEmail">Email Address *</label>
+            <input type="email" id="aRegEmail" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+            <label for="aRegUser">Username *</label>
+            <input type="text" id="aRegUser" placeholder="Choose admin username">
+        </div>
+        <div class="form-group">
+            <label for="aRegPass">Password *</label>
+            <input type="password" id="aRegPass" placeholder="Create a strong password">
+            <div class="strength-bar-wrap"><div class="strength-bar" id="aRegStrengthBar"></div></div>
+            <p class="password-hint">Min 8 chars • uppercase • lowercase • special char</p>
+        </div>
+        <div class="form-group">
+            <label for="aRegPassConfirm">Confirm Password *</label>
+            <input type="password" id="aRegPassConfirm" placeholder="Retype password">
+        </div>
+        <div class="alert-box" id="adminRegAlert"></div>
+        <div class="btn-group">
+            <button class="btn-primary" id="adminRegBtn">👑 Create Owner Account</button>
+            <button class="btn-ghost" onclick="window.location.href='admin-login.html'">← Back</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

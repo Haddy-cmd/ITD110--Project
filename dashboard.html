@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard MP4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="dashboard.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">ITE193</div>
+
+        <nav>
+            <ul>
+                <!-- HOME -->
+                <li><a href="#" id="homeNav">🏠 Home</a></li>
+
+                <!-- PROFILE -->
+                <li>
+                    <details>
+                        <summary>👤 Profile</summary>
+                        <ul class="dropdown">
+                            <li id="viewProfileMenu">🪪 View Profile</li>
+                            <li id="editProfileMenu">✏️ Edit Profile</li>
+                        </ul>
+                    </details>
+                </li>
+
+                <!-- SETTINGS -->
+                <li>
+                    <details>
+                        <summary>⚙️ Settings</summary>
+                        <ul class="dropdown">
+                            <li id="changePasswordMenu">🔑 Change Password</li>
+                        </ul>
+                    </details>
+                </li>
+
+                <!-- SHOP -->
+                <li>
+                    <details id="shopDetails">
+                        <summary>🛒 Shop</summary>
+                        <ul class="dropdown">
+                            <li id="inventoryMenu">📦 Product Inventory</li>
+                            <li id="viewCartMenu">
+                                🛍️ View Cart
+                                <span class="cart-badge" id="cartBadge">0</span>
+                            </li>
+                            <li id="orderHistoryMenu">📋 Order History</li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
+        </nav>
+
+        <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+    </aside>
+
+    <!-- ── CONTENT ── -->
+    <div class="content">
+        <header class="topbar">
+            <h4 id="topbarTitle">Dashboard</h4>
+            <div class="profile-badge">
+                <div class="avatar" id="avatarInitial">?</div>
+                <span class="profile-name" id="profileName">Guest</span>
+            </div>
+        </header>
+
+        <div class="main-body">
+
+            <!-- ── HOME VIEW ── -->
+            <div class="view active" id="homeView">
+                <div class="welcome-card">
+                    <h2>Welcome to ITE-193, <span id="welcomeName">Guest</span>! 👋</h2>
+                    <p>You are logged in successfully. Browse our Sari-Sari Store inventory and start shopping!</p>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <label>Products</label>
+                            <span id="statProducts">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🛍️</div>
+                        <div class="stat-info">
+                            <label>Cart Items</label>
+                            <span id="statCart">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-info">
+                            <label>Orders</label>
+                            <span id="statOrders">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile summary -->
+                <div class="profile-card" id="profileSummaryCard">
+                    <h3>📋 Your Profile</h3>
+                    <div class="profile-grid">
+                        <div class="profile-field">
+                            <label>First Name</label>
+                            <span id="pfFirst">—</span>
+                        </div>
+                        <div class="profile-field">
+                            <label>Middle Name</label>
+                            <span id="pfMiddle">—</span>
+                        </div>
+                        <div class="profile-field">
+                            <label>Last Name</label>
+                            <span id="pfLast">—</span>
+                        </div>
+                        <div class="profile-field">
+                            <label>Username</label>
+                            <span id="pfUsername">—</span>
+                        </div>
+                        <div class="profile-field" style="grid-column: span 2">
+                            <label>Address</label>
+                            <span id="pfAddress">—</span>
+                        </div>
+                        <div class="profile-field" style="grid-column: span 2">
+                            <label>Email</label>
+                            <span id="pfEmail">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── INVENTORY VIEW ── -->
+            <div class="view" id="inventoryView">
+                <div class="section-header">
+                    <h2>📦 Product Inventory</h2>
+                    <div class="filter-bar">
+                        <input type="text" id="searchInput" placeholder="🔍 Search products…">
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="product-grid" id="productGrid">
+                    <!-- injected by JS -->
+                </div>
+            </div>
+
+            <!-- ── CART VIEW ── -->
+            <div class="view" id="cartView">
+                <div class="section-header">
+                    <h2>🛍️ Shopping Cart</h2>
+                    <button class="clear-cart-btn" id="clearCartBtn">🗑️ Clear Cart</button>
+                </div>
+                <div class="cart-wrapper" id="cartWrapper">
+                    <div class="empty-state" id="cartEmpty">
+                        <div class="empty-icon">🛒</div>
+                        <p>Your cart is empty. Go shop something!</p>
+                    </div>
+                    <table class="cart-table" id="cartTable" style="display:none">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Name</th>
+                                <th>Unit Price</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartTableBody"></tbody>
+                    </table>
+                    <div class="cart-footer" id="cartFooter" style="display:none">
+                        <div class="cart-total">Total: <span id="cartTotal">₱0.00</span></div>
+                        <button class="checkout-btn" id="checkoutBtn">✅ Checkout</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── ORDER HISTORY VIEW ── -->
+            <div class="view" id="orderHistoryView">
+                <div class="section-header">
+                    <h2>📋 Order History</h2>
+                </div>
+                <div id="ordersContent">
+                    <div class="empty-state" id="ordersEmpty">
+                        <div class="empty-icon">📦</div>
+                        <p>No orders yet. Start shopping!</p>
+                    </div>
+                    <table class="orders-table" id="ordersTable" style="display:none">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date & Time</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div><!-- /main-body -->
+    </div><!-- /content -->
+</div><!-- /container -->
+
+<!-- ── EDIT PROFILE MODAL ── -->
+<div class="modal-overlay" id="editProfileModal">
+    <div class="modal">
+        <h2>✏️ Edit Profile</h2>
+        <hr>
+        <div class="form-row-2">
+            <div class="form-group">
+                <label>First Name *</label>
+                <input type="text" id="editFirst" placeholder="First name">
+            </div>
+            <div class="form-group">
+                <label>Middle Name</label>
+                <input type="text" id="editMiddle" placeholder="Middle name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Last Name *</label>
+            <input type="text" id="editLast" placeholder="Last name">
+        </div>
+        <div class="form-group">
+            <label>Address *</label>
+            <input type="text" id="editAddress" placeholder="Full address">
+        </div>
+        <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="editEmail" placeholder="email@example.com">
+        </div>
+        <div class="alert" id="editAlert"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" id="cancelEditBtn">Cancel</button>
+            <button class="btn-save"   id="saveEditBtn">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── CHANGE PASSWORD MODAL ── -->
+<div class="modal-overlay" id="changePasswordModal">
+    <div class="modal">
+        <h2>🔑 Change Password</h2>
+        <hr>
+        <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="oldPassword" placeholder="Enter current password">
+        </div>
+        <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="newPassword" placeholder="Enter new password">
+            <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
+            <p class="password-hint">Min 8 chars • uppercase • lowercase • special char</p>
+        </div>
+        <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" id="retypePassword" placeholder="Retype new password">
+        </div>
+        <div class="alert" id="pwAlert"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" id="cancelPasswordBtn">Cancel</button>
+            <button class="btn-save"   id="savePasswordBtn">Save Password</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── CHECKOUT CONFIRM MODAL ── -->
+<div class="modal-overlay" id="checkoutModal">
+    <div class="modal wide">
+        <h2>✅ Confirm Checkout</h2>
+        <hr>
+        <p style="color:var(--muted);font-size:0.93rem;margin-bottom:14px;">Review your order before confirming.</p>
+        <div class="checkout-summary">
+            <h3>🧾 Order Summary</h3>
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="receiptBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">Grand Total</td>
+                        <td id="receiptTotal">₱0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="alert" id="checkoutAlert"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" id="cancelCheckoutBtn">Cancel</button>
+            <button class="btn-success" id="confirmCheckoutBtn">✅ Confirm Purchase</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── SUCCESS RECEIPT MODAL ── -->
+<div class="modal-overlay" id="receiptModal">
+    <div class="modal wide">
+        <h2>🎉 Order Placed!</h2>
+        <hr>
+        <p style="color:var(--muted);font-size:0.93rem;margin-bottom:14px;">Thank you for your purchase! Here is your receipt.</p>
+        <div class="checkout-summary">
+            <h3>🧾 Receipt</h3>
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="finalReceiptBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">Grand Total</td>
+                        <td id="finalReceiptTotal">₱0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:10px;" id="receiptDate"></p>
+        <div class="modal-actions">
+            <button class="btn-save" id="closeReceiptBtn">Done 🎊</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

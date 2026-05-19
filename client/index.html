@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sari-Sari Store — Login</title>
+    <meta name="description" content="Login or register to the Sari-Sari Store inventory and sales system.">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="card-wrapper">
+    <div class="store-logo">
+        <span class="logo-icon">🏪</span>
+        <h1>Sari-Sari Store</h1>
+        <p>Inventory & Sales Management System</p>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" id="tabLogin"    role="tab" aria-selected="true">Login</button>
+        <button class="tab-btn"        id="tabRegister" role="tab" aria-selected="false">Register</button>
+    </div>
+
+    <!-- ── LOGIN PANEL ── -->
+    <div class="panel active" id="loginPanel">
+        <div class="form-group">
+            <label for="loginUser">Username</label>
+            <input type="text" id="loginUser" placeholder="Enter your username" autocomplete="username">
+        </div>
+        <div class="form-group">
+            <label for="loginPass">Password</label>
+            <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password">
+            <div class="show-pass-row">
+                <input type="checkbox" id="showLoginPass">
+                <label for="showLoginPass">Show password</label>
+            </div>
+        </div>
+        <div class="alert-box" id="loginAlert"></div>
+        <div class="btn-group">
+            <button class="btn-primary" id="loginBtn">🔓 Login</button>
+        </div>
+        <p style="text-align:center;margin-top:18px;font-size:0.84rem;color:var(--muted);">
+            Are you the store owner? <button class="link-btn" onclick="window.location.href='admin-login.html'">Admin Login →</button>
+        </p>
+    </div>
+
+    <!-- ── REGISTER PANEL ── -->
+    <div class="panel" id="registerPanel">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="regFirst">First Name *</label>
+                <input type="text" id="regFirst" placeholder="First name">
+            </div>
+            <div class="form-group">
+                <label for="regMiddle">Middle Name</label>
+                <input type="text" id="regMiddle" placeholder="Middle name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="regLast">Last Name *</label>
+            <input type="text" id="regLast" placeholder="Last name">
+        </div>
+        <div class="form-group">
+            <label for="regAddress">Address *</label>
+            <input type="text" id="regAddress" placeholder="Full address">
+        </div>
+        <div class="form-group">
+            <label for="regEmail">Email Address *</label>
+            <input type="email" id="regEmail" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+            <label for="regUser">Username *</label>
+            <input type="text" id="regUser" placeholder="Choose a username">
+        </div>
+        <div class="form-group">
+            <label for="regPass">Password *</label>
+            <input type="password" id="regPass" placeholder="Create a password">
+            <div class="strength-bar-wrap"><div class="strength-bar" id="regStrengthBar"></div></div>
+            <p class="password-hint">Min 8 chars • uppercase • lowercase • special char</p>
+        </div>
+        <div class="form-group">
+            <label for="regPassConfirm">Confirm Password *</label>
+            <input type="password" id="regPassConfirm" placeholder="Retype password">
+        </div>
+        <div class="alert-box" id="registerAlert"></div>
+        <div class="btn-group">
+            <button class="btn-primary" id="registerBtn">✅ Create Account</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

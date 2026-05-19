@@ -1,0 +1,76 @@
+{
+  "users": [
+    {
+      "username": "Jumailah",
+      "password": "Jums@12345",
+      "firstName": "Jumailah",
+      "middleName": "A.",
+      "lastName": "Mamalampac",
+      "address": "3rd st. MSU Lomidong",
+      "email": "jumailah@ite193.edu"
+    },
+    {
+      "username": "Norhadi",
+      "password": "Haddy2003",
+      "firstName": "Norhadi",
+      "middleName": "M.",
+      "lastName": "Norodin",
+      "address": "Campo Ranao Marawi City",
+      "email": "Norhadi@ite193.edu"
+    },
+    {
+      "username": "Khim10",
+      "password": "Khim@12345",
+      "firstName": "Khim",
+      "middleName": "S.",
+      "lastName": "Limbona",
+      "address": "MSU Sikap",
+      "email": "Khim@ite193.edu"
+    },
+    {
+      "username": "Norsaima0987",
+      "password": "norsaima@bts",
+      "firstName": "Norsaima",
+      "middleName": "S.",
+      "lastName": "Bascara",
+      "address": "1st st. MSU Marawi",
+      "email": "Norsaima@ite193.edu"
+    },
+    {
+      "username": "Yasser4567",
+      "password": "Yasser@cics",
+      "firstName": "Moh'd Yasser",
+      "middleName": "S.",
+      "lastName": "Mauidala",
+      "address": "5th St. MSU Dimalna ",
+      "email": "Yass@ite193.edu"
+    },
+    {
+      "username": "Arafat@3390",
+      "password": "Arafat@2005",
+      "firstName": "Arafat",
+      "middleName": "M.",
+      "lastName": "Macapantao",
+      "address": "MSU Fisheries",
+      "email": "Arafat@ite193.edu"
+    },
+     {
+      "username": "Asniah",
+      "password": "Asniah@2006",
+      "firstName": "Asniah",
+      "middleName": "M.",
+      "lastName": "Zapanta",
+      "address": "Angoyao",
+      "email": "Asniah@ite193.edu"
+    },
+     {
+      "username": "Abdulazis",
+      "password": "Azis@2003",
+      "firstName": "Abdulazis",
+      "middleName": "Saro",
+      "lastName": "Edres",
+      "address": "Barrio Salam",
+      "email": "Azis@ite193.edu"
+    }
+  ]
+}
