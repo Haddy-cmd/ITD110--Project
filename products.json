@@ -1,7 +1,7 @@
 {
   "products": [
     { "name": "Lucky Me Pancit Canton", "quantity": 50, "price": 15, "image": "img/lucky-me.png", "emoji": "🍜", "category": "canned & instant goods" },
-    { "name": "Nissin Cup Noodles", "quantity": 40, "price": 20, "image": "img/nissin-cup.jpg", "emoji": "🍵", "category": "canned & instant goods" },
+    { "name": "Nissin Cup Noodles", "quantity": 40, "price": 20, "image": "img/nissin-cup.png", "emoji": "🍵", "category": "canned & instant goods" },
     { "name": "Skyflakes Crackers", "quantity": 60, "price": 12, "image": "img/skyflakes.png", "emoji": "🍪", "category": "snack & sweets" },
     { "name": "Nova Country Cheddar", "quantity": 45, "price": 10, "image": "img/nova.png", "emoji": "🧀", "category": "snack & sweets" },
     { "name": "Clover Chips BBQ", "quantity": 55, "price": 10, "image": "img/Clover-Chips.png", "emoji": "🌽", "category": "snack & sweets" },

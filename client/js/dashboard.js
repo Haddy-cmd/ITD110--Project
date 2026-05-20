@@ -101,7 +101,7 @@ function populateUserInfo() {
     document.getElementById('pfLast').textContent     = currentUser.lastName  || '—';
     document.getElementById('pfUsername').textContent = currentUser.username;
     document.getElementById('pfEmail').textContent    = currentUser.email || '—';
-    document.getElementById('pfAddress').textContent  = '(see Profile tab)';
+    document.getElementById('pfAddress').textContent  = currentUser.address || '—';
 }
 
 function populateProfileView() {
@@ -357,11 +357,20 @@ document.getElementById('saveEditBtn').addEventListener('click', async () => {
     const address    = document.getElementById('editAddress').value.trim();
     const email      = document.getElementById('editEmail').value.trim();
     if (!firstName || !lastName || !address || !email) { showAlert('editAlert', 'Required fields missing.'); return; }
-    showAlert('editAlert', 'Profile updated.', 'success');
-    Object.assign(currentUser, { firstName, middleName, lastName, address, email });
-    localStorage.setItem('user', JSON.stringify(currentUser));
-    populateUserInfo(); populateProfileView();
-    setTimeout(() => closeModal('editProfileModal'), 1400);
+    
+    try {
+        await apiFetch('/auth/profile', {
+            method: 'PUT',
+            body: JSON.stringify({ firstName, middleName, lastName, address, email })
+        });
+        showAlert('editAlert', 'Profile updated.', 'success');
+        Object.assign(currentUser, { firstName, middleName, lastName, address, email });
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        populateUserInfo(); populateProfileView();
+        setTimeout(() => closeModal('editProfileModal'), 1400);
+    } catch (e) {
+        showAlert('editAlert', e.message);
+    }
 });
 
 /* ── CHANGE PASSWORD ── */
@@ -380,12 +389,22 @@ document.getElementById('newPassword').addEventListener('input', function () {
 });
 document.getElementById('savePassBtn').addEventListener('click', async () => {
     hideAlert('passAlert');
-    const oldPw  = document.getElementById('oldPassword').value;
-    const newPw  = document.getElementById('newPassword').value;
-    const retype = document.getElementById('retypePassword').value;
-    if (!oldPw || !newPw || !retype) { showAlert('passAlert', 'All fields required.'); return; }
-    if (newPw !== retype) { showAlert('passAlert', 'Passwords do not match.'); return; }
-    showAlert('passAlert', 'Add PATCH /api/auth/change-password to backend for persistence.', 'info');
+    const oldPassword = document.getElementById('oldPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const retype      = document.getElementById('retypePassword').value;
+    if (!oldPassword || !newPassword || !retype) { showAlert('passAlert', 'All fields required.'); return; }
+    if (newPassword !== retype) { showAlert('passAlert', 'Passwords do not match.'); return; }
+    
+    try {
+        await apiFetch('/auth/change-password', {
+            method: 'PATCH',
+            body: JSON.stringify({ oldPassword, newPassword })
+        });
+        showAlert('passAlert', 'Password updated successfully.', 'success');
+        setTimeout(() => closeModal('changePassModal'), 1400);
+    } catch (e) {
+        showAlert('passAlert', e.message);
+    }
 });
 
 /* ── LOGOUT ── */
@@ -395,6 +414,13 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
 
 /* ── INIT ── */
 (async function init() {
+    try {
+        const latestUser = await apiFetch('/auth/profile');
+        Object.assign(currentUser, latestUser);
+        localStorage.setItem('user', JSON.stringify(currentUser));
+    } catch (e) {
+        console.error('Failed to sync profile', e);
+    }
     populateUserInfo();
     try {
         products = await apiFetch('/products');

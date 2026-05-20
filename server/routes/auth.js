@@ -2,6 +2,7 @@ const router  = require('express').Router();
 const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
 const User     = require('../models/User');
+const auth     = require('../middleware/auth');
 
 // ── Helper: sign JWT ────────────────────────────────────────────────────────
 function signToken(user) {
@@ -115,7 +116,10 @@ router.post('/login', async (req, res) => {
                 id: user._id,
                 username: user.username,
                 firstName: user.firstName,
+                middleName: user.middleName || '',
                 lastName: user.lastName,
+                email: user.email,
+                address: user.address,
                 role: user.role,
                 status: user.status
             }
@@ -129,6 +133,74 @@ router.post('/login', async (req, res) => {
 router.get('/check-admin', async (req, res) => {
     const adminExists = await User.findOne({ role: 'admin' }).lean();
     res.json({ adminExists: !!adminExists });
+});
+
+// ── PUT /api/auth/profile — Update logged-in user profile ───────────────────
+router.put('/profile', auth, async (req, res) => {
+    try {
+        const { firstName, middleName, lastName, address, email } = req.body;
+        
+        if (!firstName || !lastName || !address || !email) {
+            return res.status(400).json({ message: 'Required fields missing.' });
+        }
+
+        const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRx.test(email)) return res.status(400).json({ message: 'Invalid email address.' });
+
+        const existingEmail = await User.findOne({ email: email.toLowerCase(), _id: { $ne: req.user.id } });
+        if (existingEmail) return res.status(409).json({ message: 'Email already in use by another account.' });
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user.id,
+            { firstName, middleName: middleName || '', lastName, address, email: email.toLowerCase() },
+            { new: true, select: '-passwordHash' }
+        );
+
+        if (!updatedUser) return res.status(404).json({ message: 'User not found.' });
+
+        res.json({ message: 'Profile updated successfully.', user: updatedUser });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error.', error: err.message });
+    }
+});
+
+// ── GET /api/auth/profile — Get logged-in user profile ──────────────────────
+router.get('/profile', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-passwordHash');
+        if (!user) return res.status(404).json({ message: 'User not found.' });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error.', error: err.message });
+    }
+});
+
+// ── PATCH /api/auth/change-password — Change logged-in user password ────────
+router.patch('/change-password', auth, async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+        if (!oldPassword || !newPassword) {
+            return res.status(400).json({ message: 'Old and new passwords required.' });
+        }
+
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found.' });
+
+        const match = await bcrypt.compare(oldPassword, user.passwordHash);
+        if (!match) return res.status(400).json({ message: 'Incorrect old password.' });
+
+        const pwRx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
+        if (!pwRx.test(newPassword)) {
+            return res.status(400).json({ message: 'Password must be 8+ chars with uppercase, lowercase, and a special character.' });
+        }
+
+        user.passwordHash = await bcrypt.hash(newPassword, 12);
+        await user.save();
+
+        res.json({ message: 'Password updated successfully.' });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error.', error: err.message });
+    }
 });
 
 module.exports = router;

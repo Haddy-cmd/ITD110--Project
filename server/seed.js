@@ -22,7 +22,7 @@ const SEED_USERS = [
 
 const SEED_PRODUCTS = [
     { name: 'Lucky Me Pancit Canton',       quantity: 50,  price: 15, emoji: '🍜', image: 'img/lucky-me.png',        category: 'canned & instant goods' },
-    { name: 'Nissin Cup Noodles',           quantity: 40,  price: 20, emoji: '🍵', image: 'img/nissin-cup.jpg',       category: 'canned & instant goods' },
+    { name: 'Nissin Cup Noodles',           quantity: 40,  price: 20, emoji: '🍵', image: 'img/nissin-cup.png',       category: 'canned & instant goods' },
     { name: 'Skyflakes Crackers',           quantity: 60,  price: 12, emoji: '🍪', image: 'img/skyflakes.png',        category: 'snack & sweets'          },
     { name: 'Nova Country Cheddar',         quantity: 45,  price: 10, emoji: '🧀', image: 'img/nova.png',             category: 'snack & sweets'          },
     { name: 'Clover Chips BBQ',             quantity: 55,  price: 10, emoji: '🌽', image: 'img/Clover-Chips.png',     category: 'snack & sweets'          },

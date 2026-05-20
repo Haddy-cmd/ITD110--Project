@@ -85,14 +85,23 @@ document.getElementById('menuToggle')?.addEventListener('click', () =>
     document.getElementById('sidebar').classList.toggle('open')
 );
 
-/* ── Populate admin info ── */
-(function populateAdmin() {
+async function loadAdminProfile() {
+    try {
+        const latestUser = await apiFetch('/auth/profile');
+        Object.assign(currentUser, latestUser);
+        localStorage.setItem('user', JSON.stringify(currentUser));
+    } catch (e) {
+        console.error('Failed to sync admin profile', e);
+    }
     const name    = currentUser.firstName || 'Admin';
     const initial = name.charAt(0).toUpperCase();
     document.getElementById('sidebarName').textContent   = name;
     document.getElementById('sidebarAvatar').textContent = initial;
     document.getElementById('topbarAvatar').textContent  = initial;
-})();
+    const welcomeEl = document.getElementById('welcomeName');
+    if (welcomeEl) welcomeEl.textContent = name;
+}
+loadAdminProfile();
 
 /* ════════════════════════════════════════════════════════════════════
    OVERVIEW
@@ -296,6 +305,66 @@ document.getElementById('epRemoveImageBtn').addEventListener('click', () => {
     document.getElementById('epFileName').textContent = 'No file chosen';
     document.getElementById('epImagePreviewWrap').style.display = 'none';
     document.getElementById('epImagePreview').src = '';
+});
+
+// ── Camera Handlers ──
+let currentCameraTarget = null; // 'add' or 'edit'
+let cameraStreamObject = null;
+
+async function openCamera(target) {
+    currentCameraTarget = target;
+    hideAlert('cameraAlert');
+    try {
+        cameraStreamObject = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        const videoEl = document.getElementById('cameraStream');
+        videoEl.srcObject = cameraStreamObject;
+        openModal('cameraModal');
+    } catch (err) {
+        // Fallback or error
+        showAlert(target === 'add' ? 'addProductAlert' : 'editProductAlert', 'Camera access denied or unavailable.');
+    }
+}
+
+function stopCamera() {
+    if (cameraStreamObject) {
+        cameraStreamObject.getTracks().forEach(track => track.stop());
+        cameraStreamObject = null;
+    }
+    closeModal('cameraModal');
+}
+
+document.getElementById('apCameraBtn').addEventListener('click', () => openCamera('add'));
+document.getElementById('epCameraBtn').addEventListener('click', () => openCamera('edit'));
+
+document.getElementById('closeCameraModal').addEventListener('click', stopCamera);
+document.getElementById('cancelCameraBtn').addEventListener('click', stopCamera);
+
+document.getElementById('captureCameraBtn').addEventListener('click', () => {
+    const video = document.getElementById('cameraStream');
+    const canvas = document.getElementById('cameraCanvas');
+    
+    // Set canvas dimensions to match video stream
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    const dataUrl = canvas.toDataURL('image/png');
+    
+    if (currentCameraTarget === 'add') {
+        addProductImageBase64 = dataUrl;
+        document.getElementById('apFileName').textContent = 'camera-snapshot.png';
+        document.getElementById('apImagePreview').src = addProductImageBase64;
+        document.getElementById('apImagePreviewWrap').style.display = 'flex';
+    } else if (currentCameraTarget === 'edit') {
+        editProductImageBase64 = dataUrl;
+        document.getElementById('epFileName').textContent = 'camera-snapshot.png';
+        document.getElementById('epImagePreview').src = editProductImageBase64;
+        document.getElementById('epImagePreviewWrap').style.display = 'flex';
+    }
+    
+    stopCamera();
 });
 
 /* Add Product */

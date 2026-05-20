@@ -28,7 +28,13 @@
     --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --sidebar-w: 232px;
 }
-body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+body { 
+    font-family: var(--font); 
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), url('../img/dashboard-bg.png') no-repeat center center/cover fixed; 
+    background-color: var(--bg); 
+    color: var(--text); 
+    min-height: 100vh; 
+}
 
 /* ── Layout ── */
 .app-layout { display: flex; height: 100vh; overflow: hidden; }

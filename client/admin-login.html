@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,39 +9,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
 </head>
+
 <body>
-<div class="card-wrapper">
-    <div class="store-logo">
-        <span class="logo-icon"></span>
-        <h1>Owner Portal</h1>
-        <p>Sari-Sari Store Management System</p>
-    </div>
+    <div class="card-wrapper">
+        <div class="store-logo">
 
-    <div class="panel active" id="adminLoginPanel">
-        <div class="admin-badge">Admin Access</div>
-        <div class="form-group">
-            <label for="adminLoginUser">Username</label>
-            <input type="text" id="adminLoginUser" placeholder="Admin username" autocomplete="username">
+            <h1>Owner Portal</h1>
+            <p>Tindahan ng mga Alaala Sari-sari Store</p>
         </div>
-        <div class="form-group">
-            <label for="adminLoginPass">Password</label>
-            <input type="password" id="adminLoginPass" placeholder="Admin password" autocomplete="current-password">
-            <div class="show-pass-row">
-                <input type="checkbox" id="showAdminPass">
-                <label for="showAdminPass">Show password</label>
+
+        <div class="panel active" id="adminLoginPanel">
+            <div class="admin-badge">Admin Access</div>
+            <div class="form-group">
+                <label for="adminLoginUser">Username</label>
+                <input type="text" id="adminLoginUser" placeholder="Admin username" autocomplete="username">
             </div>
+            <div class="form-group">
+                <label for="adminLoginPass">Password</label>
+                <input type="password" id="adminLoginPass" placeholder="Admin password" autocomplete="current-password">
+                <div class="show-pass-row">
+                    <input type="checkbox" id="showAdminPass">
+                    <label for="showAdminPass">Show password</label>
+                </div>
+            </div>
+            <div class="alert-box" id="adminLoginAlert"></div>
+            <div class="btn-group">
+                <button class="btn-primary" id="adminLoginBtn">Sign In as Admin</button>
+                <button class="btn-ghost" onclick="window.location.href='index.html'">Back to Cashier Login</button>
+            </div>
+            <p style="text-align:center;margin-top:18px;font-size:0.82rem;color:var(--muted);">
+                No admin account yet? <button class="link-btn" id="goAdminRegisterBtn">Create Owner Account</button>
+            </p>
         </div>
-        <div class="alert-box" id="adminLoginAlert"></div>
-        <div class="btn-group">
-            <button class="btn-primary" id="adminLoginBtn">Sign In as Admin</button>
-            <button class="btn-ghost" onclick="window.location.href='index.html'">Back to Cashier Login</button>
-        </div>
-        <p style="text-align:center;margin-top:18px;font-size:0.82rem;color:var(--muted);">
-            No admin account yet? <button class="link-btn" id="goAdminRegisterBtn">Create Owner Account</button>
-        </p>
     </div>
-</div>
 
-<script src="js/auth.js"></script>
+    <script src="js/auth.js"></script>
 </body>
+
 </html>

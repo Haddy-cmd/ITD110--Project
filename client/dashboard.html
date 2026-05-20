@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,218 +8,319 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="css/dashboard.css" rel="stylesheet">
 </head>
+
 <body>
-<div class="app-layout">
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-brand"><span class="brand-icon">S</span><span class="brand-name">Sari-Sari</span></div>
-        <div class="sidebar-user">
-            <div class="sidebar-avatar" id="sidebarAvatar">?</div>
-            <div class="sidebar-user-info">
-                <span class="sidebar-username" id="sidebarName">Loading…</span>
-                <span class="sidebar-role">Cashier</span>
+    <div class="app-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand"><span class="brand-name">Sari-Sari</span></div>
+            <div class="sidebar-user">
+                <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+                <div class="sidebar-user-info">
+                    <span class="sidebar-username" id="sidebarName">Loading…</span>
+                    <span class="sidebar-role">Cashier</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="homeView">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg></span>
+                    <span>Dashboard</span>
+                </a>
+                <div class="nav-group-label">Shop</div>
+                <a href="#" class="nav-item" data-view="inventoryView">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                        </svg></span>
+                    <span>Products</span>
+                </a>
+                <a href="#" class="nav-item" data-view="cartView">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <circle cx="9" cy="21" r="1" />
+                            <circle cx="20" cy="21" r="1" />
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                        </svg></span>
+                    <span>Cart</span>
+                    <span class="badge" id="cartBadge" style="display:none">0</span>
+                </a>
+                <a href="#" class="nav-item" data-view="orderHistoryView">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg></span>
+                    <span>My Orders</span>
+                </a>
+                <div class="nav-group-label">Account</div>
+                <a href="#" class="nav-item" data-view="profileView">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg></span>
+                    <span>Profile</span>
+                </a>
+            </nav>
+            <button class="logout-btn" id="logoutBtn">Sign Out</button>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="main-wrap">
+            <header class="topbar">
+                <button class="menu-toggle" id="menuToggle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <h1 class="topbar-title" id="topbarTitle">Dashboard</h1>
+                <div class="topbar-avatar" id="topbarAvatar">?</div>
+            </header>
+            <main class="main-content">
+
+                <!-- HOME VIEW -->
+                <section class="view active" id="homeView">
+                    <div class="welcome-banner">
+                        <div>
+                            <h2>Welcome back, <span id="welcomeName">Cashier</span></h2>
+                            <p>Browse our store inventory and start selling.</p>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-body"><span class="stat-value" id="statProducts">0</span><span
+                                    class="stat-label">Products</span></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-body"><span class="stat-value" id="statCart">0</span><span
+                                    class="stat-label">In Cart</span></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-body"><span class="stat-value" id="statOrders">0</span><span
+                                    class="stat-label">My Orders</span></div>
+                        </div>
+                    </div>
+                    <div class="profile-card">
+                        <h3>Your Profile</h3>
+                        <div class="profile-grid">
+                            <div class="pf-field"><label>First Name</label><span id="pfFirst">—</span></div>
+                            <div class="pf-field"><label>Last Name</label><span id="pfLast">—</span></div>
+                            <div class="pf-field"><label>Username</label><span id="pfUsername">—</span></div>
+                            <div class="pf-field"><label>Email</label><span id="pfEmail">—</span></div>
+                            <div class="pf-field full"><label>Address</label><span id="pfAddress">—</span></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- INVENTORY VIEW -->
+                <section class="view" id="inventoryView">
+                    <div class="section-header">
+                        <h2>Products</h2>
+                        <div class="filter-bar">
+                            <input type="text" id="searchInput" placeholder="Search products…">
+                            <select id="categoryFilter">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="product-grid" id="productGrid"></div>
+                </section>
+
+                <!-- CART VIEW -->
+                <section class="view" id="cartView">
+                    <div class="section-header">
+                        <h2>Shopping Cart</h2>
+                        <button class="btn-outline-danger" id="clearCartBtn">Clear Cart</button>
+                    </div>
+                    <div id="cartEmpty" class="empty-state">
+                        <div class="empty-icon">—</div>
+                        <p>Your cart is empty.</p>
+                    </div>
+                    <table class="data-table" id="cartTable" style="display:none">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartTableBody"></tbody>
+                    </table>
+                    <div class="cart-footer" id="cartFooter" style="display:none">
+                        <span class="cart-total">Total: <strong id="cartTotal">₱0.00</strong></span>
+                        <button class="btn-success" id="checkoutBtn">Checkout</button>
+                    </div>
+                </section>
+
+                <!-- ORDER HISTORY VIEW -->
+                <section class="view" id="orderHistoryView">
+                    <div class="section-header">
+                        <h2>My Orders</h2>
+                    </div>
+                    <div id="ordersEmpty" class="empty-state">
+                        <div class="empty-icon">—</div>
+                        <p>No orders yet.</p>
+                    </div>
+                    <table class="data-table" id="ordersTable" style="display:none">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </section>
+
+                <!-- PROFILE VIEW -->
+                <section class="view" id="profileView">
+                    <div class="section-header">
+                        <h2>My Profile</h2>
+                    </div>
+                    <div class="profile-card">
+                        <div class="profile-grid">
+                            <div class="pf-field"><label>First Name</label><span id="pvFirst">—</span></div>
+                            <div class="pf-field"><label>Middle Name</label><span id="pvMiddle">—</span></div>
+                            <div class="pf-field"><label>Last Name</label><span id="pvLast">—</span></div>
+                            <div class="pf-field"><label>Username</label><span id="pvUsername">—</span></div>
+                            <div class="pf-field full"><label>Address</label><span id="pvAddress">—</span></div>
+                            <div class="pf-field full"><label>Email</label><span id="pvEmail">—</span></div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn-primary" id="openEditProfileBtn">Edit Profile</button>
+                            <button class="btn-outline" id="openChangePassBtn">Change Password</button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- EDIT PROFILE MODAL -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Profile</h3><button class="modal-close" id="closeEditModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row-2">
+                    <div class="form-group"><label>First Name *</label><input type="text" id="editFirst"></div>
+                    <div class="form-group"><label>Middle Name</label><input type="text" id="editMiddle"></div>
+                </div>
+                <div class="form-group"><label>Last Name *</label><input type="text" id="editLast"></div>
+                <div class="form-group"><label>Address *</label><input type="text" id="editAddress"></div>
+                <div class="form-group"><label>Email *</label><input type="email" id="editEmail"></div>
+                <div class="alert-box" id="editAlert"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" id="cancelEditBtn">Cancel</button>
+                <button class="btn-primary" id="saveEditBtn">Save Changes</button>
             </div>
         </div>
-        <nav class="sidebar-nav">
-            <a href="#" class="nav-item active" data-view="homeView">
-                <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
-                <span>Dashboard</span>
-            </a>
-            <div class="nav-group-label">Shop</div>
-            <a href="#" class="nav-item" data-view="inventoryView">
-                <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
-                <span>Products</span>
-            </a>
-            <a href="#" class="nav-item" data-view="cartView">
-                <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>
-                <span>Cart</span>
-                <span class="badge" id="cartBadge" style="display:none">0</span>
-            </a>
-            <a href="#" class="nav-item" data-view="orderHistoryView">
-                <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-                <span>My Orders</span>
-            </a>
-            <div class="nav-group-label">Account</div>
-            <a href="#" class="nav-item" data-view="profileView">
-                <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-                <span>Profile</span>
-            </a>
-        </nav>
-        <button class="logout-btn" id="logoutBtn">Sign Out</button>
-    </aside>
+    </div>
 
-    <!-- MAIN -->
-    <div class="main-wrap">
-        <header class="topbar">
-            <button class="menu-toggle" id="menuToggle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </button>
-            <h1 class="topbar-title" id="topbarTitle">Dashboard</h1>
-            <div class="topbar-avatar" id="topbarAvatar">?</div>
-        </header>
-        <main class="main-content">
-
-            <!-- HOME VIEW -->
-            <section class="view active" id="homeView">
-                <div class="welcome-banner">
-                    <div><h2>Welcome back, <span id="welcomeName">Cashier</span></h2><p>Browse our store inventory and start selling.</p></div>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-body"><span class="stat-value" id="statProducts">0</span><span class="stat-label">Products</span></div></div>
-                    <div class="stat-card"><div class="stat-body"><span class="stat-value" id="statCart">0</span><span class="stat-label">In Cart</span></div></div>
-                    <div class="stat-card"><div class="stat-body"><span class="stat-value" id="statOrders">0</span><span class="stat-label">My Orders</span></div></div>
-                </div>
-                <div class="profile-card">
-                    <h3>Your Profile</h3>
-                    <div class="profile-grid">
-                        <div class="pf-field"><label>First Name</label><span id="pfFirst">—</span></div>
-                        <div class="pf-field"><label>Last Name</label><span id="pfLast">—</span></div>
-                        <div class="pf-field"><label>Username</label><span id="pfUsername">—</span></div>
-                        <div class="pf-field"><label>Email</label><span id="pfEmail">—</span></div>
-                        <div class="pf-field full"><label>Address</label><span id="pfAddress">—</span></div>
+    <!-- CHANGE PASSWORD MODAL -->
+    <div class="modal-overlay" id="changePassModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Change Password</h3><button class="modal-close" id="closePassModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group"><label>Current Password</label><input type="password" id="oldPassword"></div>
+                <div class="form-group"><label>New Password</label><input type="password" id="newPassword">
+                    <div class="strength-bar-wrap">
+                        <div class="strength-bar" id="passStrengthBar"></div>
                     </div>
                 </div>
-            </section>
-
-            <!-- INVENTORY VIEW -->
-            <section class="view" id="inventoryView">
-                <div class="section-header">
-                    <h2>Products</h2>
-                    <div class="filter-bar">
-                        <input type="text" id="searchInput" placeholder="Search products…">
-                        <select id="categoryFilter"><option value="">All Categories</option></select>
-                    </div>
+                <div class="form-group"><label>Confirm New Password</label><input type="password" id="retypePassword">
                 </div>
-                <div class="product-grid" id="productGrid"></div>
-            </section>
+                <div class="alert-box" id="passAlert"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" id="cancelPassBtn">Cancel</button>
+                <button class="btn-primary" id="savePassBtn">Update Password</button>
+            </div>
+        </div>
+    </div>
 
-            <!-- CART VIEW -->
-            <section class="view" id="cartView">
-                <div class="section-header">
-                    <h2>Shopping Cart</h2>
-                    <button class="btn-outline-danger" id="clearCartBtn">Clear Cart</button>
-                </div>
-                <div id="cartEmpty" class="empty-state"><div class="empty-icon">—</div><p>Your cart is empty.</p></div>
-                <table class="data-table" id="cartTable" style="display:none">
-                    <thead><tr><th>Item</th><th>Name</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr></thead>
-                    <tbody id="cartTableBody"></tbody>
+    <!-- CHECKOUT MODAL -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <h3>Confirm Checkout</h3><button class="modal-close" id="closeCheckoutModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="muted-text">Review your order before confirming.</p>
+                <table class="receipt-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receiptBody"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><strong>Grand Total</strong></td>
+                            <td><strong id="receiptTotal">₱0.00</strong></td>
+                        </tr>
+                    </tfoot>
                 </table>
-                <div class="cart-footer" id="cartFooter" style="display:none">
-                    <span class="cart-total">Total: <strong id="cartTotal">₱0.00</strong></span>
-                    <button class="btn-success" id="checkoutBtn">Checkout</button>
-                </div>
-            </section>
+                <div class="alert-box" id="checkoutAlert"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" id="cancelCheckoutBtn">Cancel</button>
+                <button class="btn-success" id="confirmCheckoutBtn">Confirm Purchase</button>
+            </div>
+        </div>
+    </div>
 
-            <!-- ORDER HISTORY VIEW -->
-            <section class="view" id="orderHistoryView">
-                <div class="section-header"><h2>My Orders</h2></div>
-                <div id="ordersEmpty" class="empty-state"><div class="empty-icon">—</div><p>No orders yet.</p></div>
-                <table class="data-table" id="ordersTable" style="display:none">
-                    <thead><tr><th>#</th><th>Date</th><th>Items</th><th>Total</th></tr></thead>
-                    <tbody id="ordersTableBody"></tbody>
+    <!-- RECEIPT MODAL -->
+    <div class="modal-overlay" id="receiptModal">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <h3>Order Placed</h3>
+            </div>
+            <div class="modal-body">
+                <p class="muted-text">Thank you for your purchase!</p>
+                <table class="receipt-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="finalReceiptBody"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><strong>Grand Total</strong></td>
+                            <td><strong id="finalReceiptTotal">₱0.00</strong></td>
+                        </tr>
+                    </tfoot>
                 </table>
-            </section>
-
-            <!-- PROFILE VIEW -->
-            <section class="view" id="profileView">
-                <div class="section-header"><h2>My Profile</h2></div>
-                <div class="profile-card">
-                    <div class="profile-grid">
-                        <div class="pf-field"><label>First Name</label><span id="pvFirst">—</span></div>
-                        <div class="pf-field"><label>Middle Name</label><span id="pvMiddle">—</span></div>
-                        <div class="pf-field"><label>Last Name</label><span id="pvLast">—</span></div>
-                        <div class="pf-field"><label>Username</label><span id="pvUsername">—</span></div>
-                        <div class="pf-field full"><label>Address</label><span id="pvAddress">—</span></div>
-                        <div class="pf-field full"><label>Email</label><span id="pvEmail">—</span></div>
-                    </div>
-                    <div class="profile-actions">
-                        <button class="btn-primary" id="openEditProfileBtn">Edit Profile</button>
-                        <button class="btn-outline" id="openChangePassBtn">Change Password</button>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-</div>
-
-<!-- EDIT PROFILE MODAL -->
-<div class="modal-overlay" id="editProfileModal">
-    <div class="modal">
-        <div class="modal-header"><h3>Edit Profile</h3><button class="modal-close" id="closeEditModal">&times;</button></div>
-        <div class="modal-body">
-            <div class="form-row-2">
-                <div class="form-group"><label>First Name *</label><input type="text" id="editFirst"></div>
-                <div class="form-group"><label>Middle Name</label><input type="text" id="editMiddle"></div>
+                <p class="muted-text" id="receiptDate" style="margin-top:10px;"></p>
             </div>
-            <div class="form-group"><label>Last Name *</label><input type="text" id="editLast"></div>
-            <div class="form-group"><label>Address *</label><input type="text" id="editAddress"></div>
-            <div class="form-group"><label>Email *</label><input type="email" id="editEmail"></div>
-            <div class="alert-box" id="editAlert"></div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-outline" id="cancelEditBtn">Cancel</button>
-            <button class="btn-primary" id="saveEditBtn">Save Changes</button>
+            <div class="modal-footer"><button class="btn-success" id="closeReceiptBtn">Done</button></div>
         </div>
     </div>
-</div>
 
-<!-- CHANGE PASSWORD MODAL -->
-<div class="modal-overlay" id="changePassModal">
-    <div class="modal">
-        <div class="modal-header"><h3>Change Password</h3><button class="modal-close" id="closePassModal">&times;</button></div>
-        <div class="modal-body">
-            <div class="form-group"><label>Current Password</label><input type="password" id="oldPassword"></div>
-            <div class="form-group"><label>New Password</label><input type="password" id="newPassword">
-                <div class="strength-bar-wrap"><div class="strength-bar" id="passStrengthBar"></div></div>
-            </div>
-            <div class="form-group"><label>Confirm New Password</label><input type="password" id="retypePassword"></div>
-            <div class="alert-box" id="passAlert"></div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-outline" id="cancelPassBtn">Cancel</button>
-            <button class="btn-primary" id="savePassBtn">Update Password</button>
-        </div>
-    </div>
-</div>
-
-<!-- CHECKOUT MODAL -->
-<div class="modal-overlay" id="checkoutModal">
-    <div class="modal modal-wide">
-        <div class="modal-header"><h3>Confirm Checkout</h3><button class="modal-close" id="closeCheckoutModal">&times;</button></div>
-        <div class="modal-body">
-            <p class="muted-text">Review your order before confirming.</p>
-            <table class="receipt-table">
-                <thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th></tr></thead>
-                <tbody id="receiptBody"></tbody>
-                <tfoot><tr><td colspan="3"><strong>Grand Total</strong></td><td><strong id="receiptTotal">₱0.00</strong></td></tr></tfoot>
-            </table>
-            <div class="alert-box" id="checkoutAlert"></div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-outline" id="cancelCheckoutBtn">Cancel</button>
-            <button class="btn-success" id="confirmCheckoutBtn">Confirm Purchase</button>
-        </div>
-    </div>
-</div>
-
-<!-- RECEIPT MODAL -->
-<div class="modal-overlay" id="receiptModal">
-    <div class="modal modal-wide">
-        <div class="modal-header"><h3>Order Placed</h3></div>
-        <div class="modal-body">
-            <p class="muted-text">Thank you for your purchase!</p>
-            <table class="receipt-table">
-                <thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th></tr></thead>
-                <tbody id="finalReceiptBody"></tbody>
-                <tfoot><tr><td colspan="3"><strong>Grand Total</strong></td><td><strong id="finalReceiptTotal">₱0.00</strong></td></tr></tfoot>
-            </table>
-            <p class="muted-text" id="receiptDate" style="margin-top:10px;"></p>
-        </div>
-        <div class="modal-footer"><button class="btn-success" id="closeReceiptBtn">Done</button></div>
-    </div>
-</div>
-
-<div class="toast" id="toast"></div>
-<script src="js/dashboard.js"></script>
+    <div class="toast" id="toast"></div>
+    <script src="js/dashboard.js"></script>
 </body>
+
 </html>
