@@ -7,11 +7,23 @@ if (!token || !currentUser || currentUser.role !== 'admin') {
 
 const API = 'http://localhost:3000/api';
 
+/* ── Product avatar helpers ── */
+function getInitials(name) {
+    return name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+function getAvatarColor(name) {
+    const colors = ['#16a34a','#15803d','#166534','#14532d','#1a7a42',
+                    '#0f766e','#0e7490','#1d4ed8','#6d28d9','#7c3aed'];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    return colors[Math.abs(hash) % colors.length];
+}
+
 /* ── API helper ── */
 async function apiFetch(path, opts = {}) {
     const res = await fetch(API + path, {
         ...opts,
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', ...(opts.headers||{}) }
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', ...(opts.headers || {}) }
     });
     const data = await res.json();
     if (res.status === 401) { localStorage.clear(); window.location.href = 'admin-login.html'; }
@@ -45,8 +57,11 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 
 /* ── View navigation ── */
 const viewTitles = {
-    overviewView: 'Overview', usersView: '👥 User Accounts',
-    inventoryView: '📦 Inventory', analyticsView: '📈 Sales Analytics', salesView: '🧾 All Sales'
+    overviewView:  'Overview',
+    usersView:     'User Accounts',
+    inventoryView: 'Inventory',
+    analyticsView: 'Sales Analytics',
+    salesView:     'All Sales'
 };
 function showView(id) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -60,22 +75,28 @@ function showView(id) {
     if (id === 'salesView')     loadAllSales();
 }
 document.querySelectorAll('.nav-item[data-view]').forEach(a => {
-    a.addEventListener('click', e => { e.preventDefault(); showView(a.dataset.view); document.getElementById('sidebar').classList.remove('open'); });
+    a.addEventListener('click', e => {
+        e.preventDefault();
+        showView(a.dataset.view);
+        document.getElementById('sidebar').classList.remove('open');
+    });
 });
-document.getElementById('menuToggle')?.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+document.getElementById('menuToggle')?.addEventListener('click', () =>
+    document.getElementById('sidebar').classList.toggle('open')
+);
 
 /* ── Populate admin info ── */
 (function populateAdmin() {
-    const name = currentUser.firstName || 'Admin';
+    const name    = currentUser.firstName || 'Admin';
     const initial = name.charAt(0).toUpperCase();
-    document.getElementById('sidebarName').textContent = name;
+    document.getElementById('sidebarName').textContent   = name;
     document.getElementById('sidebarAvatar').textContent = initial;
-    document.getElementById('topbarAvatar').textContent = initial;
+    document.getElementById('topbarAvatar').textContent  = initial;
 })();
 
-/* ════════════════════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════════════
    OVERVIEW
-════════════════════════════════════════════════════════════════════════════ */
+════════════════════════════════════════════════════════════════════ */
 async function loadOverview() {
     try {
         const [users, products, analytics] = await Promise.all([
@@ -83,16 +104,16 @@ async function loadOverview() {
             apiFetch('/products'),
             apiFetch('/sales/analytics?range=daily')
         ]);
-        document.getElementById('ovUsers').textContent   = users.length;
-        document.getElementById('ovPending').textContent = users.filter(u => u.status === 'pending').length;
+        document.getElementById('ovUsers').textContent    = users.length;
+        document.getElementById('ovPending').textContent  = users.filter(u => u.status === 'pending').length;
         document.getElementById('ovProducts').textContent = products.length;
         document.getElementById('ovRevenue').textContent  = `₱${analytics.totalRevenue.toFixed(2)}`;
-    } catch(err) { showToast(`❌ ${err.message}`); }
+    } catch (err) { showToast(err.message); }
 }
 
-/* ════════════════════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════════════
    USER MANAGEMENT
-════════════════════════════════════════════════════════════════════════════ */
+════════════════════════════════════════════════════════════════════ */
 async function loadUsers() {
     try {
         const users = await apiFetch('/users');
@@ -103,48 +124,48 @@ async function loadUsers() {
             return;
         }
         users.forEach(u => {
-            const pillClass = { active:'pill-active', pending:'pill-pending', suspended:'pill-suspended' }[u.status] || '';
+            const pillClass = { active: 'pill-active', pending: 'pill-pending', suspended: 'pill-suspended' }[u.status] || '';
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${u.firstName} ${u.lastName}</strong></td>
-                <td>${u.username}</td>
-                <td style="font-size:0.83rem">${u.email}</td>
+                <td style="color:var(--text-2)">${u.username}</td>
+                <td style="font-size:0.82rem;color:var(--muted)">${u.email}</td>
                 <td><span class="pill ${pillClass}">${u.status}</span></td>
-                <td style="font-size:0.82rem;color:var(--muted)">${new Date(u.createdAt).toLocaleDateString()}</td>
+                <td style="font-size:0.8rem;color:var(--muted)">${new Date(u.createdAt).toLocaleDateString()}</td>
                 <td><div class="action-row">
-                    ${u.status==='pending'   ? `<button class="btn-approve"    data-id="${u._id}">✅ Approve</button>`    : ''}
-                    ${u.status==='active'    ? `<button class="btn-suspend"    data-id="${u._id}">⏸ Suspend</button>`    : ''}
-                    ${u.status==='suspended' ? `<button class="btn-reactivate" data-id="${u._id}">▶ Reactivate</button>` : ''}
-                    <button class="btn-delete" data-id="${u._id}" data-name="${u.firstName}">🗑 Delete</button>
+                    ${u.status === 'pending'   ? `<button class="btn-approve"    data-id="${u._id}">Approve</button>`    : ''}
+                    ${u.status === 'active'    ? `<button class="btn-suspend"    data-id="${u._id}">Suspend</button>`    : ''}
+                    ${u.status === 'suspended' ? `<button class="btn-reactivate" data-id="${u._id}">Reactivate</button>` : ''}
+                    <button class="btn-delete" data-id="${u._id}" data-name="${u.firstName}">Delete</button>
                 </div></td>`;
             tbody.appendChild(tr);
         });
 
         tbody.querySelectorAll('.btn-approve').forEach(btn => btn.addEventListener('click', async () => {
             if (!confirm('Approve this account?')) return;
-            try { await apiFetch(`/users/${btn.dataset.id}/approve`, { method:'PATCH' }); showToast('✅ User approved'); loadUsers(); }
-            catch(e) { showToast(`❌ ${e.message}`); }
+            try { await apiFetch(`/users/${btn.dataset.id}/approve`, { method: 'PATCH' }); showToast('Account approved'); loadUsers(); }
+            catch (e) { showToast(e.message); }
         }));
         tbody.querySelectorAll('.btn-suspend').forEach(btn => btn.addEventListener('click', async () => {
             if (!confirm('Suspend this account?')) return;
-            try { await apiFetch(`/users/${btn.dataset.id}/suspend`, { method:'PATCH' }); showToast('⏸ User suspended'); loadUsers(); }
-            catch(e) { showToast(`❌ ${e.message}`); }
+            try { await apiFetch(`/users/${btn.dataset.id}/suspend`, { method: 'PATCH' }); showToast('Account suspended'); loadUsers(); }
+            catch (e) { showToast(e.message); }
         }));
         tbody.querySelectorAll('.btn-reactivate').forEach(btn => btn.addEventListener('click', async () => {
-            try { await apiFetch(`/users/${btn.dataset.id}/reactivate`, { method:'PATCH' }); showToast('▶ User reactivated'); loadUsers(); }
-            catch(e) { showToast(`❌ ${e.message}`); }
+            try { await apiFetch(`/users/${btn.dataset.id}/reactivate`, { method: 'PATCH' }); showToast('Account reactivated'); loadUsers(); }
+            catch (e) { showToast(e.message); }
         }));
         tbody.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', async () => {
             if (!confirm(`Permanently delete ${btn.dataset.name}'s account? This cannot be undone.`)) return;
-            try { await apiFetch(`/users/${btn.dataset.id}`, { method:'DELETE' }); showToast('🗑️ Account deleted'); loadUsers(); }
-            catch(e) { showToast(`❌ ${e.message}`); }
+            try { await apiFetch(`/users/${btn.dataset.id}`, { method: 'DELETE' }); showToast('Account deleted'); loadUsers(); }
+            catch (e) { showToast(e.message); }
         }));
-    } catch(err) { showToast(`❌ ${err.message}`); }
+    } catch (err) { showToast(err.message); }
 }
 
-/* ════════════════════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════════════
    INVENTORY MANAGEMENT
-════════════════════════════════════════════════════════════════════════════ */
+════════════════════════════════════════════════════════════════════ */
 let adminProducts = [];
 
 async function loadInventory() {
@@ -154,22 +175,29 @@ async function loadInventory() {
         tbody.innerHTML = '';
         adminProducts.forEach(p => {
             const rowClass = p.quantity === 0 ? 'out-stock-row' : p.quantity <= 5 ? 'low-stock-row' : '';
+            const initials = getInitials(p.name);
+            const color    = getAvatarColor(p.name);
             const tr = document.createElement('tr');
             tr.className = rowClass;
             tr.innerHTML = `
-                <td><span style="font-size:0.72rem;font-weight:800;color:var(--muted)">${p.code}</span></td>
-                <td><strong>${p.emoji || '📦'} ${p.name}</strong></td>
-                <td style="color:var(--accent2);font-size:0.83rem">${p.category}</td>
+                <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span class="product-initial-sm" style="background:${color}">${initials}</span>
+                        <strong>${p.name}</strong>
+                    </div>
+                </td>
+                <td style="color:var(--muted);font-size:0.82rem">${p.category}</td>
                 <td><strong style="color:var(--success)">₱${p.price.toFixed(2)}</strong></td>
-                <td><span style="color:${p.quantity===0?'var(--danger)':p.quantity<=5?'var(--warning)':'var(--text)'};font-weight:700">
-                    ${p.quantity}${p.quantity===0?' ❌':p.quantity<=5?' ⚠️':''}
+                <td><span style="color:${p.quantity === 0 ? 'var(--danger)' : p.quantity <= 5 ? 'var(--warning)' : 'var(--text-2)'};font-weight:600">
+                    ${p.quantity}${p.quantity === 0 ? ' — out' : p.quantity <= 5 ? ' — low' : ''}
                 </span></td>
                 <td><div class="action-row">
-                    <button class="btn-edit"   data-id="${p._id}">✏️ Edit</button>
-                    <button class="btn-delete" data-id="${p._id}" data-name="${p.name}">🗑 Delete</button>
+                    <button class="btn-edit"   data-id="${p._id}">Edit</button>
+                    <button class="btn-delete" data-id="${p._id}" data-name="${p.name}">Delete</button>
                 </div></td>`;
             tbody.appendChild(tr);
         });
+
         tbody.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', () => {
             const p = adminProducts.find(x => x._id === btn.dataset.id);
             if (!p) return;
@@ -178,40 +206,124 @@ async function loadInventory() {
             document.getElementById('epCategory').value = p.category;
             document.getElementById('epPrice').value    = p.price;
             document.getElementById('epQty').value      = p.quantity;
-            document.getElementById('epEmoji').value    = p.emoji || '';
+            
+            // Set up image preview
+            editProductImageBase64 = p.image || '';
+            document.getElementById('epImageFile').value = '';
+            if (p.image) {
+                document.getElementById('epFileName').textContent = 'Current Product Image';
+                document.getElementById('epImagePreview').src = p.image;
+                document.getElementById('epImagePreviewWrap').style.display = 'flex';
+            } else {
+                document.getElementById('epFileName').textContent = 'No file chosen';
+                document.getElementById('epImagePreviewWrap').style.display = 'none';
+                document.getElementById('epImagePreview').src = '';
+            }
+            
             hideAlert('editProductAlert'); openModal('editProductModal');
         }));
         tbody.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', async () => {
             if (!confirm(`Delete "${btn.dataset.name}"? This cannot be undone.`)) return;
-            try { await apiFetch(`/products/${btn.dataset.id}`, { method:'DELETE' }); showToast('🗑️ Product deleted'); loadInventory(); }
-            catch(e) { showToast(`❌ ${e.message}`); }
+            try { await apiFetch(`/products/${btn.dataset.id}`, { method: 'DELETE' }); showToast('Product deleted'); loadInventory(); }
+            catch (e) { showToast(e.message); }
         }));
-    } catch(err) { showToast(`❌ ${err.message}`); }
+    } catch (err) { showToast(err.message); }
 }
+
+/* Image upload states */
+let addProductImageBase64 = '';
+let editProductImageBase64 = '';
+
+// Add Product Image Handlers
+document.getElementById('apUploadBtn').addEventListener('click', () => {
+    document.getElementById('apImageFile').click();
+});
+document.getElementById('apImageFile').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+        showAlert('addProductAlert', 'Please select a valid image file.');
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+        showAlert('addProductAlert', 'Image size must be less than 5MB.');
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        addProductImageBase64 = event.target.result;
+        document.getElementById('apFileName').textContent = file.name;
+        document.getElementById('apImagePreview').src = addProductImageBase64;
+        document.getElementById('apImagePreviewWrap').style.display = 'flex';
+    };
+    reader.readAsDataURL(file);
+});
+document.getElementById('apRemoveImageBtn').addEventListener('click', () => {
+    addProductImageBase64 = '';
+    document.getElementById('apImageFile').value = '';
+    document.getElementById('apFileName').textContent = 'No file chosen';
+    document.getElementById('apImagePreviewWrap').style.display = 'none';
+    document.getElementById('apImagePreview').src = '';
+});
+
+// Edit Product Image Handlers
+document.getElementById('epUploadBtn').addEventListener('click', () => {
+    document.getElementById('epImageFile').click();
+});
+document.getElementById('epImageFile').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+        showAlert('editProductAlert', 'Please select a valid image file.');
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+        showAlert('editProductAlert', 'Image size must be less than 5MB.');
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        editProductImageBase64 = event.target.result;
+        document.getElementById('epFileName').textContent = file.name;
+        document.getElementById('epImagePreview').src = editProductImageBase64;
+        document.getElementById('epImagePreviewWrap').style.display = 'flex';
+    };
+    reader.readAsDataURL(file);
+});
+document.getElementById('epRemoveImageBtn').addEventListener('click', () => {
+    editProductImageBase64 = '';
+    document.getElementById('epImageFile').value = '';
+    document.getElementById('epFileName').textContent = 'No file chosen';
+    document.getElementById('epImagePreviewWrap').style.display = 'none';
+    document.getElementById('epImagePreview').src = '';
+});
 
 /* Add Product */
 document.getElementById('openAddProductBtn').addEventListener('click', () => {
-    ['apCode','apName','apCategory','apPrice','apQty','apEmoji','apImage'].forEach(id => document.getElementById(id).value = '');
+    ['apName', 'apCategory', 'apPrice', 'apQty'].forEach(id => document.getElementById(id).value = '');
+    addProductImageBase64 = '';
+    document.getElementById('apImageFile').value = '';
+    document.getElementById('apFileName').textContent = 'No file chosen';
+    document.getElementById('apImagePreviewWrap').style.display = 'none';
+    document.getElementById('apImagePreview').src = '';
     hideAlert('addProductAlert'); openModal('addProductModal');
 });
 document.getElementById('cancelAddProductBtn').addEventListener('click', () => closeModal('addProductModal'));
 document.getElementById('closeAddProductModal').addEventListener('click', () => closeModal('addProductModal'));
 document.getElementById('saveAddProductBtn').addEventListener('click', async () => {
     hideAlert('addProductAlert');
-    const code     = document.getElementById('apCode').value.trim();
     const name     = document.getElementById('apName').value.trim();
     const category = document.getElementById('apCategory').value.trim();
     const price    = parseFloat(document.getElementById('apPrice').value);
     const quantity = parseInt(document.getElementById('apQty').value);
-    const emoji    = document.getElementById('apEmoji').value.trim() || '📦';
-    const image    = document.getElementById('apImage').value.trim();
-    if (!code||!name||!category||isNaN(price)||isNaN(quantity)) {
-        showAlert('addProductAlert','⚠️ All required fields must be filled.'); return;
+    const image    = addProductImageBase64;
+    if (!name || !category || isNaN(price) || isNaN(quantity)) {
+        showAlert('addProductAlert', 'All required fields must be filled.'); return;
     }
     try {
-        await apiFetch('/products', { method:'POST', body: JSON.stringify({ code, name, category, price, quantity, emoji, image }) });
-        showToast(`✅ "${name}" added`); closeModal('addProductModal'); loadInventory();
-    } catch(e) { showAlert('addProductAlert', `❌ ${e.message}`); }
+        await apiFetch('/products', { method: 'POST', body: JSON.stringify({ name, category, price, quantity, image }) });
+        showToast(`"${name}" added`); closeModal('addProductModal'); loadInventory();
+    } catch (e) { showAlert('addProductAlert', e.message); }
 });
 
 /* Edit Product */
@@ -224,19 +336,19 @@ document.getElementById('saveEditProductBtn').addEventListener('click', async ()
     const category = document.getElementById('epCategory').value.trim();
     const price    = parseFloat(document.getElementById('epPrice').value);
     const quantity = parseInt(document.getElementById('epQty').value);
-    const emoji    = document.getElementById('epEmoji').value.trim();
-    if (!name||!category||isNaN(price)||isNaN(quantity)) {
-        showAlert('editProductAlert','⚠️ All required fields must be filled.'); return;
+    const image    = editProductImageBase64;
+    if (!name || !category || isNaN(price) || isNaN(quantity)) {
+        showAlert('editProductAlert', 'All required fields must be filled.'); return;
     }
     try {
-        await apiFetch(`/products/${id}`, { method:'PUT', body: JSON.stringify({ name, category, price, quantity, emoji }) });
-        showToast(`✅ "${name}" updated`); closeModal('editProductModal'); loadInventory();
-    } catch(e) { showAlert('editProductAlert', `❌ ${e.message}`); }
+        await apiFetch(`/products/${id}`, { method: 'PUT', body: JSON.stringify({ name, category, price, quantity, image }) });
+        showToast(`"${name}" updated`); closeModal('editProductModal'); loadInventory();
+    } catch (e) { showAlert('editProductAlert', e.message); }
 });
 
-/* ════════════════════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════════════
    SALES ANALYTICS
-════════════════════════════════════════════════════════════════════════════ */
+════════════════════════════════════════════════════════════════════ */
 document.querySelectorAll('.range-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
@@ -254,7 +366,7 @@ async function loadAnalytics(range = 'daily') {
         const avg = data.totalTransactions > 0 ? data.totalRevenue / data.totalTransactions : 0;
         document.getElementById('kpiAvg').textContent     = `₱${avg.toFixed(2)}`;
 
-        /* Top Products table */
+        /* Top Products */
         const tpBody = document.getElementById('topProductsBody');
         tpBody.innerHTML = '';
         if (!data.topProducts.length) {
@@ -262,14 +374,14 @@ async function loadAnalytics(range = 'daily') {
         } else {
             data.topProducts.forEach((p, i) => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'  '} ${p.emoji||'📦'} ${p.name}</td>
+                tr.innerHTML = `<td><span style="color:var(--muted);font-size:0.75rem;margin-right:6px">${i + 1}.</span>${p.name}</td>
                     <td><strong>${p.totalQty}</strong></td>
                     <td style="color:var(--success)">₱${p.totalRevenue.toFixed(2)}</td>`;
                 tpBody.appendChild(tr);
             });
         }
 
-        /* Sales by cashier */
+        /* Sales by Cashier */
         const cbBody = document.getElementById('cashierBody');
         cbBody.innerHTML = '';
         if (!data.salesByCashier.length) {
@@ -284,17 +396,17 @@ async function loadAnalytics(range = 'daily') {
             });
         }
 
-        /* Revenue timeline bar chart */
+        /* Revenue Timeline */
         const container = document.getElementById('timelineContainer');
         container.innerHTML = '';
         if (!data.revenueTimeline.length) {
             container.innerHTML = '<p class="no-data">No sales in this period.</p>';
         } else {
             const maxRev = Math.max(...data.revenueTimeline.map(d => d.revenue));
-            const wrap = document.createElement('div');
+            const wrap   = document.createElement('div');
             wrap.className = 'timeline-bar-wrap';
             data.revenueTimeline.forEach(d => {
-                const heightPct = maxRev > 0 ? Math.max(4, (d.revenue/maxRev)*100) : 4;
+                const heightPct = maxRev > 0 ? Math.max(4, (d.revenue / maxRev) * 100) : 4;
                 const col = document.createElement('div');
                 col.className = 'timeline-bar-col';
                 col.innerHTML = `<span class="timeline-val">₱${d.revenue.toFixed(0)}</span>
@@ -304,12 +416,12 @@ async function loadAnalytics(range = 'daily') {
             });
             container.appendChild(wrap);
         }
-    } catch(err) { showToast(`❌ ${err.message}`); }
+    } catch (err) { showToast(err.message); }
 }
 
-/* ════════════════════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════════════
    ALL SALES
-════════════════════════════════════════════════════════════════════════════ */
+════════════════════════════════════════════════════════════════════ */
 async function loadAllSales() {
     try {
         const sales = await apiFetch('/sales');
@@ -320,16 +432,16 @@ async function loadAllSales() {
             return;
         }
         sales.forEach((s, idx) => {
-            const summary = s.items.map(i => `${i.emoji||'📦'} ${i.name} ×${i.quantity}`).join(', ');
+            const summary = s.items.map(i => `${i.name} ×${i.quantity}`).join(', ');
             const tr = document.createElement('tr');
             tr.innerHTML = `<td><strong>#${sales.length - idx}</strong></td>
-                <td style="font-size:0.82rem">${new Date(s.saleDate).toLocaleString()}</td>
+                <td style="font-size:0.8rem;color:var(--muted)">${new Date(s.saleDate).toLocaleString()}</td>
                 <td><strong>${s.soldBy.fullName}</strong><br><small style="color:var(--muted)">${s.soldBy.username}</small></td>
-                <td style="max-width:280px;white-space:normal;font-size:0.8rem">${summary}</td>
+                <td style="max-width:260px;white-space:normal;font-size:0.78rem;color:var(--text-2)">${summary}</td>
                 <td><strong style="color:var(--success)">₱${s.grandTotal.toFixed(2)}</strong></td>`;
             tbody.appendChild(tr);
         });
-    } catch(err) { showToast(`❌ ${err.message}`); }
+    } catch (err) { showToast(err.message); }
 }
 
 /* ── Logout ── */

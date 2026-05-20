@@ -19,7 +19,7 @@ function hideAlert(id) {
 function setLoading(btn, loading) {
     btn.disabled = loading;
     btn.dataset.original = btn.dataset.original || btn.textContent;
-    btn.textContent = loading ? '⏳ Please wait…' : btn.dataset.original;
+    btn.textContent = loading ? 'Please wait…' : btn.dataset.original;
 }
 function getPasswordScore(pw) {
     if (!pw) return 0;
@@ -34,11 +34,11 @@ function applyStrengthBar(barId, pw) {
     const bar = document.getElementById(barId);
     if (!bar) return;
     const lvl = [
-        { w:'0%',   bg:'#e0e0e0' },
+        { w:'0%',   bg:'#334155' },
         { w:'25%',  bg:'#ef4444' },
         { w:'50%',  bg:'#f59e0b' },
         { w:'75%',  bg:'#3b82f6' },
-        { w:'100%', bg:'#22c55e' },
+        { w:'100%', bg:'#10b981' },
     ][getPasswordScore(pw)];
     bar.style.width      = lvl.w;
     bar.style.background = lvl.bg;
@@ -102,7 +102,7 @@ async function handleLogin() {
     const username = document.getElementById('loginUser')?.value.trim();
     const password = document.getElementById('loginPass')?.value;
     if (!username || !password) {
-        showAlert('loginAlert', '⚠️ Please enter your username and password.'); return;
+        showAlert('loginAlert', 'Please enter your username and password.'); return;
     }
     setLoading(loginBtn, true);
     try {
@@ -112,14 +112,14 @@ async function handleLogin() {
             body: JSON.stringify({ username, password })
         });
         const data = await res.json();
-        if (!res.ok) { showAlert('loginAlert', `❌ ${data.message}`); return; }
+        if (!res.ok) { showAlert('loginAlert', data.message); return; }
 
         localStorage.setItem('token', data.token);
         localStorage.setItem('user',  JSON.stringify(data.user));
 
         window.location.href = data.user.role === 'admin' ? 'admin-dashboard.html' : 'dashboard.html';
     } catch {
-        showAlert('loginAlert', '❌ Could not reach the server. Is it running?');
+        showAlert('loginAlert', 'Could not reach the server. Is it running?');
     } finally {
         setLoading(loginBtn, false);
     }
@@ -146,10 +146,10 @@ async function handleRegister() {
     const confirm    = document.getElementById('regPassConfirm')?.value;
 
     if (!firstName || !lastName || !address || !email || !username || !password || !confirm) {
-        showAlert('registerAlert', '⚠️ Please fill in all required fields.'); return;
+        showAlert('registerAlert', 'Please fill in all required fields.'); return;
     }
     if (password !== confirm) {
-        showAlert('registerAlert', '❌ Passwords do not match.'); return;
+        showAlert('registerAlert', 'Passwords do not match.'); return;
     }
 
     setLoading(registerBtn, true);
@@ -160,14 +160,14 @@ async function handleRegister() {
             body: JSON.stringify({ firstName, middleName, lastName, address, email, username, password })
         });
         const data = await res.json();
-        if (!res.ok) { showAlert('registerAlert', `❌ ${data.message}`); return; }
-        showAlert('registerAlert', `✅ ${data.message}`, 'success');
+        if (!res.ok) { showAlert('registerAlert', data.message); return; }
+        showAlert('registerAlert', data.message, 'success');
         setTimeout(() => {
             tabLogin?.click();
             document.getElementById('loginUser').value = username;
         }, 2200);
     } catch {
-        showAlert('registerAlert', '❌ Could not reach the server.');
+        showAlert('registerAlert', 'Could not reach the server.');
     } finally {
         setLoading(registerBtn, false);
     }
@@ -185,7 +185,7 @@ async function handleAdminLogin() {
     const username = document.getElementById('adminLoginUser')?.value.trim();
     const password = document.getElementById('adminLoginPass')?.value;
     if (!username || !password) {
-        showAlert('adminLoginAlert', '⚠️ Please enter your credentials.'); return;
+        showAlert('adminLoginAlert', 'Please enter your credentials.'); return;
     }
     setLoading(adminLoginBtn, true);
     try {
@@ -195,15 +195,15 @@ async function handleAdminLogin() {
             body: JSON.stringify({ username, password })
         });
         const data = await res.json();
-        if (!res.ok) { showAlert('adminLoginAlert', `❌ ${data.message}`); return; }
+        if (!res.ok) { showAlert('adminLoginAlert', data.message); return; }
         if (data.user.role !== 'admin') {
-            showAlert('adminLoginAlert', '❌ This account is not an admin. Use the cashier login.'); return;
+            showAlert('adminLoginAlert', 'This account is not an admin. Use the cashier login.'); return;
         }
         localStorage.setItem('token', data.token);
         localStorage.setItem('user',  JSON.stringify(data.user));
         window.location.href = 'admin-dashboard.html';
     } catch {
-        showAlert('adminLoginAlert', '❌ Could not reach the server.');
+        showAlert('adminLoginAlert', 'Could not reach the server.');
     } finally {
         setLoading(adminLoginBtn, false);
     }
@@ -249,10 +249,10 @@ async function handleAdminRegister() {
     const confirm    = document.getElementById('aRegPassConfirm')?.value;
 
     if (!firstName || !lastName || !address || !email || !username || !password || !confirm) {
-        showAlert('adminRegAlert', '⚠️ Please fill in all required fields.'); return;
+        showAlert('adminRegAlert', 'Please fill in all required fields.'); return;
     }
     if (password !== confirm) {
-        showAlert('adminRegAlert', '❌ Passwords do not match.'); return;
+        showAlert('adminRegAlert', 'Passwords do not match.'); return;
     }
 
     setLoading(adminRegBtn, true);
@@ -263,11 +263,11 @@ async function handleAdminRegister() {
             body: JSON.stringify({ firstName, middleName, lastName, address, email, username, password })
         });
         const data = await res.json();
-        if (!res.ok) { showAlert('adminRegAlert', `❌ ${data.message}`); return; }
-        showAlert('adminRegAlert', `✅ ${data.message}`, 'success');
+        if (!res.ok) { showAlert('adminRegAlert', data.message); return; }
+        showAlert('adminRegAlert', data.message, 'success');
         setTimeout(() => window.location.href = 'admin-login.html', 2000);
     } catch {
-        showAlert('adminRegAlert', '❌ Could not reach the server.');
+        showAlert('adminRegAlert', 'Could not reach the server.');
     } finally {
         setLoading(adminRegBtn, false);
     }

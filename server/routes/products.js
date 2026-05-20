@@ -27,14 +27,12 @@ router.get('/:id', auth, async (req, res) => {
 // ── POST /api/products — Admin: Add new product ─────────────────────────────
 router.post('/', auth, adminOnly, async (req, res) => {
     try {
-        const { code, name, category, price, quantity, emoji, image } = req.body;
-        if (!code || !name || !category || price == null || quantity == null) {
-            return res.status(400).json({ message: 'code, name, category, price, and quantity are required.' });
+        const { name, category, price, quantity, emoji, image } = req.body;
+        if (!name || !category || price == null || quantity == null) {
+            return res.status(400).json({ message: 'name, category, price, and quantity are required.' });
         }
-        const exists = await Product.findOne({ code });
-        if (exists) return res.status(409).json({ message: `Product code ${code} already exists.` });
 
-        const product = await Product.create({ code, name, category, price, quantity, emoji, image });
+        const product = await Product.create({ name, category, price, quantity, emoji, image });
         res.status(201).json({ message: `Product "${name}" added.`, product });
     } catch (err) {
         res.status(500).json({ message: 'Server error.', error: err.message });

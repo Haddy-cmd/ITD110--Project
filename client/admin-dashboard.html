@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel — Sari-Sari Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="css/dashboard.css" rel="stylesheet">
     <link href="css/admin.css" rel="stylesheet">
 </head>
@@ -12,52 +12,68 @@
 <div class="app-layout">
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-brand"><span class="brand-icon">👑</span><span class="brand-name">Admin Panel</span></div>
+        <div class="sidebar-brand"><span class="brand-icon">A</span><span class="brand-name">Admin Panel</span></div>
         <div class="sidebar-user">
             <div class="sidebar-avatar" id="sidebarAvatar">A</div>
             <div class="sidebar-user-info">
                 <span class="sidebar-username" id="sidebarName">Admin</span>
-                <span class="sidebar-role" style="color:#f59e0b">Owner</span>
+                <span class="sidebar-role" style="color:#818cf8">Owner</span>
             </div>
         </div>
         <nav class="sidebar-nav">
-            <a href="#" class="nav-item active" data-view="overviewView"><span class="nav-icon">📊</span><span>Overview</span></a>
+            <a href="#" class="nav-item active" data-view="overviewView">
+                <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                <span>Overview</span>
+            </a>
             <div class="nav-group-label">Management</div>
-            <a href="#" class="nav-item" data-view="usersView"><span class="nav-icon">👥</span><span>User Accounts</span></a>
-            <a href="#" class="nav-item" data-view="inventoryView"><span class="nav-icon">📦</span><span>Inventory</span></a>
+            <a href="#" class="nav-item" data-view="usersView">
+                <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                <span>User Accounts</span>
+            </a>
+            <a href="#" class="nav-item" data-view="inventoryView">
+                <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+                <span>Inventory</span>
+            </a>
             <div class="nav-group-label">Reports</div>
-            <a href="#" class="nav-item" data-view="analyticsView"><span class="nav-icon">📈</span><span>Sales Analytics</span></a>
-            <a href="#" class="nav-item" data-view="salesView"><span class="nav-icon">🧾</span><span>All Sales</span></a>
+            <a href="#" class="nav-item" data-view="analyticsView">
+                <span class="nav-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+                <span>Sales Analytics</span>
+            </a>
+            <a href="#" class="nav-item" data-view="salesView">
+                <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+                <span>All Sales</span>
+            </a>
         </nav>
-        <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+        <button class="logout-btn" id="logoutBtn">Sign Out</button>
     </aside>
 
     <!-- MAIN -->
     <div class="main-wrap">
         <header class="topbar">
-            <button class="menu-toggle" id="menuToggle">☰</button>
+            <button class="menu-toggle" id="menuToggle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
             <h1 class="topbar-title" id="topbarTitle">Overview</h1>
-            <div class="topbar-avatar" id="topbarAvatar" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#1a1206">A</div>
+            <div class="topbar-avatar" id="topbarAvatar">A</div>
         </header>
         <main class="main-content">
 
             <!-- OVERVIEW VIEW -->
             <section class="view active" id="overviewView">
-                <div class="welcome-banner" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(251,191,36,0.08));border-color:rgba(245,158,11,0.25)">
-                    <div><h2>Welcome, Owner! 👑</h2><p>Here's your store overview at a glance.</p></div>
-                    <div class="welcome-icon">🏪</div>
+                <div class="welcome-banner">
+                    <div><h2>Welcome, Owner</h2><p>Here's your store overview at a glance.</p></div>
                 </div>
                 <div class="stats-grid stats-grid-4">
-                    <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-body"><span class="stat-value" id="ovUsers">0</span><span class="stat-label">Cashiers</span></div></div>
-                    <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-body"><span class="stat-value" id="ovPending">0</span><span class="stat-label">Pending Approval</span></div></div>
-                    <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-body"><span class="stat-value" id="ovProducts">0</span><span class="stat-label">Products</span></div></div>
-                    <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-body"><span class="stat-value" id="ovRevenue">₱0</span><span class="stat-label">Today's Revenue</span></div></div>
+                    <div class="stat-card"><div class="stat-body"><span class="stat-value" id="ovUsers">0</span><span class="stat-label">Cashiers</span></div></div>
+                    <div class="stat-card"><div class="stat-body"><span class="stat-value" id="ovPending">0</span><span class="stat-label">Pending Approval</span></div></div>
+                    <div class="stat-card"><div class="stat-body"><span class="stat-value" id="ovProducts">0</span><span class="stat-label">Products</span></div></div>
+                    <div class="stat-card"><div class="stat-body"><span class="stat-value" id="ovRevenue">₱0</span><span class="stat-label">Today's Revenue</span></div></div>
                 </div>
             </section>
 
             <!-- USER MANAGEMENT VIEW -->
             <section class="view" id="usersView">
-                <div class="section-header"><h2>👥 User Accounts</h2></div>
+                <div class="section-header"><h2>User Accounts</h2></div>
                 <div id="usersContent">
                     <table class="data-table" id="usersTable">
                         <thead><tr><th>Name</th><th>Username</th><th>Email</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
@@ -69,11 +85,11 @@
             <!-- INVENTORY VIEW -->
             <section class="view" id="inventoryView">
                 <div class="section-header">
-                    <h2>📦 Inventory</h2>
+                    <h2>Inventory</h2>
                     <button class="btn-primary" id="openAddProductBtn">+ Add Product</button>
                 </div>
                 <table class="data-table" id="adminProductTable">
-                    <thead><tr><th>Code</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
+                    <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
                     <tbody id="adminProductBody"></tbody>
                 </table>
             </section>
@@ -81,7 +97,7 @@
             <!-- ANALYTICS VIEW -->
             <section class="view" id="analyticsView">
                 <div class="section-header">
-                    <h2>📈 Sales Analytics</h2>
+                    <h2>Sales Analytics</h2>
                     <div class="range-tabs">
                         <button class="range-btn active" data-range="daily">Daily</button>
                         <button class="range-btn" data-range="weekly">Weekly</button>
@@ -90,7 +106,7 @@
                 </div>
                 <div class="analytics-grid">
                     <div class="analytics-card full">
-                        <h3>💰 Revenue Summary</h3>
+                        <h3>Revenue Summary</h3>
                         <div class="kpi-row">
                             <div class="kpi"><span class="kpi-value" id="kpiRevenue">₱0.00</span><span class="kpi-label">Total Revenue</span></div>
                             <div class="kpi"><span class="kpi-value" id="kpiTx">0</span><span class="kpi-label">Transactions</span></div>
@@ -98,21 +114,21 @@
                         </div>
                     </div>
                     <div class="analytics-card">
-                        <h3>🏆 Top Products</h3>
+                        <h3>Top Products</h3>
                         <table class="receipt-table" id="topProductsTable">
                             <thead><tr><th>Product</th><th>Sold</th><th>Revenue</th></tr></thead>
                             <tbody id="topProductsBody"></tbody>
                         </table>
                     </div>
                     <div class="analytics-card">
-                        <h3>👤 Sales by Cashier</h3>
+                        <h3>Sales by Cashier</h3>
                         <table class="receipt-table" id="cashierTable">
                             <thead><tr><th>Cashier</th><th>Sales</th><th>Revenue</th></tr></thead>
                             <tbody id="cashierBody"></tbody>
                         </table>
                     </div>
                     <div class="analytics-card full">
-                        <h3>📅 Revenue Timeline</h3>
+                        <h3>Revenue Timeline</h3>
                         <div id="timelineContainer"></div>
                     </div>
                 </div>
@@ -120,7 +136,7 @@
 
             <!-- ALL SALES VIEW -->
             <section class="view" id="salesView">
-                <div class="section-header"><h2>🧾 All Sales</h2></div>
+                <div class="section-header"><h2>All Sales</h2></div>
                 <table class="data-table" id="allSalesTable">
                     <thead><tr><th>#</th><th>Date</th><th>Cashier</th><th>Items</th><th>Total</th></tr></thead>
                     <tbody id="allSalesBody"></tbody>
@@ -134,24 +150,44 @@
 <!-- ADD PRODUCT MODAL -->
 <div class="modal-overlay" id="addProductModal">
     <div class="modal">
-        <div class="modal-header"><h3>+ Add Product</h3><button class="modal-close" id="closeAddProductModal">✕</button></div>
+        <div class="modal-header"><h3>Add Product</h3><button class="modal-close" id="closeAddProductModal">&times;</button></div>
         <div class="modal-body">
-            <div class="form-row-2">
-                <div class="form-group"><label>Code *</label><input type="text" id="apCode" placeholder="P026"></div>
-                <div class="form-group"><label>Emoji</label><input type="text" id="apEmoji" placeholder="📦"></div>
+            <div class="form-group">
+                <label>Category *</label>
+                <select id="apCategory" required>
+                    <option value="" disabled selected>Select a category</option>
+                    <option value="beverages">beverages</option>
+                    <option value="canned & instant goods">canned & instant goods</option>
+                    <option value="snack & sweets">snack & sweets</option>
+                    <option value="condiments & cooking essentials">condiments & cooking essentials</option>
+                    <option value="rice & grains">rice & grains</option>
+                    <option value="personal care">personal care</option>
+                    <option value="household & laundry">household & laundry</option>
+                    <option value="tobacco & Single-items">tobacco & Single-items</option>
+                </select>
             </div>
             <div class="form-group"><label>Name *</label><input type="text" id="apName"></div>
-            <div class="form-group"><label>Category *</label><input type="text" id="apCategory"></div>
             <div class="form-row-2">
                 <div class="form-group"><label>Price (₱) *</label><input type="number" id="apPrice" min="0" step="0.01"></div>
                 <div class="form-group"><label>Stock Qty *</label><input type="number" id="apQty" min="0"></div>
             </div>
-            <div class="form-group"><label>Image Path</label><input type="text" id="apImage" placeholder="img/product.png"></div>
+            <div class="form-group">
+                <label>Product Image (optional)</label>
+                <div class="file-upload-wrapper" style="display:flex;align-items:center;gap:12px;margin-top:4px">
+                    <input type="file" id="apImageFile" accept="image/*" style="display:none">
+                    <button type="button" class="btn-outline" id="apUploadBtn" style="padding:8px 16px;font-size:0.85rem;margin:0">Choose Image</button>
+                    <span id="apFileName" style="font-size:0.82rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px">No file chosen</span>
+                </div>
+                <div id="apImagePreviewWrap" style="display:none;margin-top:12px;align-items:center;gap:12px;justify-content:flex-start">
+                    <img id="apImagePreview" style="max-height:80px;border-radius:6px;border:1px solid var(--border);object-fit:cover" src="" alt="Preview">
+                    <button type="button" class="btn-outline" id="apRemoveImageBtn" style="padding:4px 10px;font-size:0.75rem;color:var(--danger);border-color:rgba(239,68,68,0.2);margin:0">Remove</button>
+                </div>
+            </div>
             <div class="alert-box" id="addProductAlert"></div>
         </div>
         <div class="modal-footer">
             <button class="btn-outline" id="cancelAddProductBtn">Cancel</button>
-            <button class="btn-primary" id="saveAddProductBtn">+ Add Product</button>
+            <button class="btn-primary" id="saveAddProductBtn">Add Product</button>
         </div>
     </div>
 </div>
@@ -159,21 +195,45 @@
 <!-- EDIT PRODUCT MODAL -->
 <div class="modal-overlay" id="editProductModal">
     <div class="modal">
-        <div class="modal-header"><h3>✏️ Edit Product</h3><button class="modal-close" id="closeEditProductModal">✕</button></div>
+        <div class="modal-header"><h3>Edit Product</h3><button class="modal-close" id="closeEditProductModal">&times;</button></div>
         <div class="modal-body">
             <input type="hidden" id="epId">
             <div class="form-group"><label>Name *</label><input type="text" id="epName"></div>
-            <div class="form-group"><label>Category *</label><input type="text" id="epCategory"></div>
+            <div class="form-group">
+                <label>Category *</label>
+                <select id="epCategory" required>
+                    <option value="" disabled>Select a category</option>
+                    <option value="beverages">beverages</option>
+                    <option value="canned & instant goods">canned & instant goods</option>
+                    <option value="snack & sweets">snack & sweets</option>
+                    <option value="condiments & cooking essentials">condiments & cooking essentials</option>
+                    <option value="rice & grains">rice & grains</option>
+                    <option value="personal care">personal care</option>
+                    <option value="household & laundry">household & laundry</option>
+                    <option value="tobacco & Single-items">tobacco & Single-items</option>
+                </select>
+            </div>
             <div class="form-row-2">
                 <div class="form-group"><label>Price (₱) *</label><input type="number" id="epPrice" min="0" step="0.01"></div>
                 <div class="form-group"><label>Stock Qty *</label><input type="number" id="epQty" min="0"></div>
             </div>
-            <div class="form-group"><label>Emoji</label><input type="text" id="epEmoji"></div>
+            <div class="form-group" style="margin-top:16px">
+                <label>Product Image (optional)</label>
+                <div class="file-upload-wrapper" style="display:flex;align-items:center;gap:12px;margin-top:4px">
+                    <input type="file" id="epImageFile" accept="image/*" style="display:none">
+                    <button type="button" class="btn-outline" id="epUploadBtn" style="padding:8px 16px;font-size:0.85rem;margin:0">Choose Image</button>
+                    <span id="epFileName" style="font-size:0.82rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px">No file chosen</span>
+                </div>
+                <div id="epImagePreviewWrap" style="display:none;margin-top:12px;align-items:center;gap:12px;justify-content:flex-start">
+                    <img id="epImagePreview" style="max-height:80px;border-radius:6px;border:1px solid var(--border);object-fit:cover" src="" alt="Preview">
+                    <button type="button" class="btn-outline" id="epRemoveImageBtn" style="padding:4px 10px;font-size:0.75rem;color:var(--danger);border-color:rgba(239,68,68,0.2);margin:0">Remove</button>
+                </div>
+            </div>
             <div class="alert-box" id="editProductAlert"></div>
         </div>
         <div class="modal-footer">
             <button class="btn-outline" id="cancelEditProductBtn">Cancel</button>
-            <button class="btn-primary" id="saveEditProductBtn">💾 Save Changes</button>
+            <button class="btn-primary" id="saveEditProductBtn">Save Changes</button>
         </div>
     </div>
 </div>

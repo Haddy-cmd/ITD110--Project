@@ -28,7 +28,7 @@ router.post('/', auth, async (req, res) => {
             // Embed full product snapshot (prices frozen at sale time)
             saleItems.push({
                 productId:   product._id,
-                code:        product.code,
+                code:        product._id.toString(),
                 name:        product.name,
                 category:    product.category,
                 emoji:       product.emoji,

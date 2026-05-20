@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sari-Sari Store — Login</title>
     <meta name="description" content="Login or register to the Sari-Sari Store inventory and sales system.">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
 </head>
 <body>
 <div class="card-wrapper">
     <div class="store-logo">
-        <span class="logo-icon">🏪</span>
+        <span class="logo-icon"></span>
         <h1>Sari-Sari Store</h1>
         <p>Inventory & Sales Management System</p>
     </div>
@@ -38,10 +38,10 @@
         </div>
         <div class="alert-box" id="loginAlert"></div>
         <div class="btn-group">
-            <button class="btn-primary" id="loginBtn">🔓 Login</button>
+            <button class="btn-primary" id="loginBtn">Sign In</button>
         </div>
-        <p style="text-align:center;margin-top:18px;font-size:0.84rem;color:var(--muted);">
-            Are you the store owner? <button class="link-btn" onclick="window.location.href='admin-login.html'">Admin Login →</button>
+        <p style="text-align:center;margin-top:18px;font-size:0.82rem;color:var(--muted);">
+            Are you the store owner? <button class="link-btn" onclick="window.location.href='admin-login.html'">Admin Login</button>
         </p>
     </div>
 
@@ -77,7 +77,7 @@
             <label for="regPass">Password *</label>
             <input type="password" id="regPass" placeholder="Create a password">
             <div class="strength-bar-wrap"><div class="strength-bar" id="regStrengthBar"></div></div>
-            <p class="password-hint">Min 8 chars • uppercase • lowercase • special char</p>
+            <p class="password-hint">Min 8 chars, uppercase, lowercase, special char</p>
         </div>
         <div class="form-group">
             <label for="regPassConfirm">Confirm Password *</label>
@@ -85,7 +85,7 @@
         </div>
         <div class="alert-box" id="registerAlert"></div>
         <div class="btn-group">
-            <button class="btn-primary" id="registerBtn">✅ Create Account</button>
+            <button class="btn-primary" id="registerBtn">Create Account</button>
         </div>
     </div>
 </div>
