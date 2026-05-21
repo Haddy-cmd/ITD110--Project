@@ -518,5 +518,16 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
     localStorage.clear(); window.location.href = 'admin-login.html';
 });
 
+// ── Theme Toggler ──────────────────────────────────────────────────────────
+const themeToggle = document.getElementById('themeToggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+}
+
 /* ── Init ── */
 loadOverview();
