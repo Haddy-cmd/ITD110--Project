@@ -47,6 +47,7 @@
                             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                         </svg></span>
                     <span>User Accounts</span>
+                    <span class="badge" id="pendingBadge" style="display:none">0</span>
                 </a>
                 <a href="#" class="nav-item" data-view="inventoryView">
                     <span class="nav-icon"><svg viewBox="0 0 24 24">
@@ -166,6 +167,12 @@
                         <h2>Inventory</h2>
                         <button class="btn-primary" id="openAddProductBtn">+ Add Product</button>
                     </div>
+                    <div class="filter-bar">
+                        <input type="text" id="adminSearchInput" placeholder="Search products…">
+                        <select id="adminCategoryFilter">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
                     <table class="data-table" id="adminProductTable">
                         <thead>
                             <tr>
@@ -239,6 +246,9 @@
                 <section class="view" id="salesView">
                     <div class="section-header">
                         <h2>All Sales</h2>
+                    </div>
+                    <div class="filter-bar">
+                        <input type="text" id="salesSearchInput" placeholder="Search by cashier, product, or transaction...">
                     </div>
                     <table class="data-table" id="allSalesTable">
                         <thead>

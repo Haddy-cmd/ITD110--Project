@@ -113,10 +113,16 @@ async function loadOverview() {
             apiFetch('/products'),
             apiFetch('/sales/analytics?range=daily')
         ]);
+        const pendingCount = users.filter(u => u.status === 'pending').length;
         document.getElementById('ovUsers').textContent    = users.length;
-        document.getElementById('ovPending').textContent  = users.filter(u => u.status === 'pending').length;
+        document.getElementById('ovPending').textContent  = pendingCount;
         document.getElementById('ovProducts').textContent = products.length;
         document.getElementById('ovRevenue').textContent  = `₱${analytics.totalRevenue.toFixed(2)}`;
+        
+        // Update pending badge
+        const badge = document.getElementById('pendingBadge');
+        badge.textContent = pendingCount;
+        badge.style.display = pendingCount > 0 ? 'inline-flex' : 'none';
     } catch (err) { showToast(err.message); }
 }
 
@@ -126,6 +132,13 @@ async function loadOverview() {
 async function loadUsers() {
     try {
         const users = await apiFetch('/users');
+        const pendingCount = users.filter(u => u.status === 'pending').length;
+        
+        // Update pending badge
+        const badge = document.getElementById('pendingBadge');
+        badge.textContent = pendingCount;
+        badge.style.display = pendingCount > 0 ? 'inline-flex' : 'none';
+        
         const tbody = document.getElementById('usersTableBody');
         tbody.innerHTML = '';
         if (!users.length) {
@@ -180,64 +193,97 @@ let adminProducts = [];
 async function loadInventory() {
     try {
         adminProducts = await apiFetch('/products');
-        const tbody = document.getElementById('adminProductBody');
-        tbody.innerHTML = '';
-        adminProducts.forEach(p => {
-            const rowClass = p.quantity === 0 ? 'out-stock-row' : p.quantity <= 5 ? 'low-stock-row' : '';
-            const initials = getInitials(p.name);
-            const color    = getAvatarColor(p.name);
-            const tr = document.createElement('tr');
-            tr.className = rowClass;
-            tr.innerHTML = `
-                <td>
-                    <div style="display:flex;align-items:center;gap:8px">
-                        <span class="product-initial-sm" style="background:${color}">${initials}</span>
-                        <strong>${p.name}</strong>
-                    </div>
-                </td>
-                <td style="color:var(--muted);font-size:0.82rem">${p.category}</td>
-                <td><strong style="color:var(--success)">₱${p.price.toFixed(2)}</strong></td>
-                <td><span style="color:${p.quantity === 0 ? 'var(--danger)' : p.quantity <= 5 ? 'var(--warning)' : 'var(--text-2)'};font-weight:600">
-                    ${p.quantity}${p.quantity === 0 ? ' — out' : p.quantity <= 5 ? ' — low' : ''}
-                </span></td>
-                <td><div class="action-row">
-                    <button class="btn-edit"   data-id="${p._id}">Edit</button>
-                    <button class="btn-delete" data-id="${p._id}" data-name="${p.name}">Delete</button>
-                </div></td>`;
-            tbody.appendChild(tr);
-        });
-
-        tbody.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', () => {
-            const p = adminProducts.find(x => x._id === btn.dataset.id);
-            if (!p) return;
-            document.getElementById('epId').value       = p._id;
-            document.getElementById('epName').value     = p.name;
-            document.getElementById('epCategory').value = p.category;
-            document.getElementById('epPrice').value    = p.price;
-            document.getElementById('epQty').value      = p.quantity;
-            
-            // Set up image preview
-            editProductImageBase64 = p.image || '';
-            document.getElementById('epImageFile').value = '';
-            if (p.image) {
-                document.getElementById('epFileName').textContent = 'Current Product Image';
-                document.getElementById('epImagePreview').src = p.image;
-                document.getElementById('epImagePreviewWrap').style.display = 'flex';
-            } else {
-                document.getElementById('epFileName').textContent = 'No file chosen';
-                document.getElementById('epImagePreviewWrap').style.display = 'none';
-                document.getElementById('epImagePreview').src = '';
-            }
-            
-            hideAlert('editProductAlert'); openModal('editProductModal');
-        }));
-        tbody.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', async () => {
-            if (!confirm(`Delete "${btn.dataset.name}"? This cannot be undone.`)) return;
-            try { await apiFetch(`/products/${btn.dataset.id}`, { method: 'DELETE' }); showToast('Product deleted'); loadInventory(); }
-            catch (e) { showToast(e.message); }
-        }));
+        renderAdminInventory();
+        populateAdminCategoryFilter();
     } catch (err) { showToast(err.message); }
 }
+
+function renderAdminInventory() {
+    const search   = (document.getElementById('adminSearchInput')?.value || '').toLowerCase();
+    const category = document.getElementById('adminCategoryFilter')?.value || '';
+    
+    const filtered = adminProducts.filter(p => {
+        const ms = p.name.toLowerCase().includes(search);
+        const mc = !category || p.category === category;
+        return ms && mc;
+    });
+    
+    const tbody = document.getElementById('adminProductBody');
+    tbody.innerHTML = '';
+    
+    if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">No products found.</td></tr>';
+        return;
+    }
+    
+    filtered.forEach(p => {
+        const rowClass = p.quantity === 0 ? 'out-stock-row' : p.quantity <= 5 ? 'low-stock-row' : '';
+        const initials = getInitials(p.name);
+        const color    = getAvatarColor(p.name);
+        const tr = document.createElement('tr');
+        tr.className = rowClass;
+        tr.innerHTML = `
+            <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                    <span class="product-initial-sm" style="background:${color}">${initials}</span>
+                    <strong>${p.name}</strong>
+                </div>
+            </td>
+            <td style="color:var(--muted);font-size:0.82rem">${p.category}</td>
+            <td><strong style="color:var(--success)">₱${p.price.toFixed(2)}</strong></td>
+            <td><span style="color:${p.quantity === 0 ? 'var(--danger)' : p.quantity <= 5 ? 'var(--warning)' : 'var(--text-2)'};font-weight:600">
+                ${p.quantity}${p.quantity === 0 ? ' — out' : p.quantity <= 5 ? ' — low' : ''}
+            </span></td>
+            <td><div class="action-row">
+                <button class="btn-edit"   data-id="${p._id}">Edit</button>
+                <button class="btn-delete" data-id="${p._id}" data-name="${p.name}">Delete</button>
+            </div></td>`;
+        tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', () => {
+        const p = adminProducts.find(x => x._id === btn.dataset.id);
+        if (!p) return;
+        document.getElementById('epId').value       = p._id;
+        document.getElementById('epName').value     = p.name;
+        document.getElementById('epCategory').value = p.category;
+        document.getElementById('epPrice').value    = p.price;
+        document.getElementById('epQty').value      = p.quantity;
+        
+        // Set up image preview
+        editProductImageBase64 = p.image || '';
+        document.getElementById('epImageFile').value = '';
+        if (p.image) {
+            document.getElementById('epFileName').textContent = 'Current Product Image';
+            document.getElementById('epImagePreview').src = p.image;
+            document.getElementById('epImagePreviewWrap').style.display = 'flex';
+        } else {
+            document.getElementById('epFileName').textContent = 'No file chosen';
+            document.getElementById('epImagePreviewWrap').style.display = 'none';
+            document.getElementById('epImagePreview').src = '';
+        }
+        
+        hideAlert('editProductAlert'); openModal('editProductModal');
+    }));
+    tbody.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', async () => {
+        if (!confirm(`Delete "${btn.dataset.name}"? This cannot be undone.`)) return;
+        try { await apiFetch(`/products/${btn.dataset.id}`, { method: 'DELETE' }); showToast('Product deleted'); loadInventory(); }
+        catch (e) { showToast(e.message); }
+    }));
+}
+
+function populateAdminCategoryFilter() {
+    const sel  = document.getElementById('adminCategoryFilter');
+    const cats = [...new Set(adminProducts.map(p => p.category))].sort();
+    // Remove existing options except the first one (All Categories)
+    while (sel.options.length > 1) {
+        sel.remove(1);
+    }
+    cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
+}
+
+document.getElementById('adminSearchInput')?.addEventListener('input', renderAdminInventory);
+document.getElementById('adminCategoryFilter')?.addEventListener('change', renderAdminInventory);
 
 /* Image upload states */
 let addProductImageBase64 = '';
@@ -491,27 +537,44 @@ async function loadAnalytics(range = 'daily') {
 /* ════════════════════════════════════════════════════════════════════
    ALL SALES
 ════════════════════════════════════════════════════════════════════ */
+let allSalesData = [];
+
 async function loadAllSales() {
     try {
-        const sales = await apiFetch('/sales');
-        const tbody = document.getElementById('allSalesBody');
-        tbody.innerHTML = '';
-        if (!sales.length) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">No sales recorded yet.</td></tr>';
-            return;
-        }
-        sales.forEach((s, idx) => {
-            const summary = s.items.map(i => `${i.name} ×${i.quantity}`).join(', ');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td><strong>#${sales.length - idx}</strong></td>
-                <td style="font-size:0.8rem;color:var(--muted)">${new Date(s.saleDate).toLocaleString()}</td>
-                <td><strong>${s.soldBy.fullName}</strong><br><small style="color:var(--muted)">${s.soldBy.username}</small></td>
-                <td style="max-width:260px;white-space:normal;font-size:0.78rem;color:var(--text-2)">${summary}</td>
-                <td><strong style="color:var(--success)">₱${s.grandTotal.toFixed(2)}</strong></td>`;
-            tbody.appendChild(tr);
-        });
+        allSalesData = await apiFetch('/sales');
+        renderAllSales();
     } catch (err) { showToast(err.message); }
 }
+
+function renderAllSales() {
+    const search = (document.getElementById('salesSearchInput')?.value || '').toLowerCase();
+    
+    const filtered = allSalesData.filter(s => {
+        const cashierMatch = (s.soldBy.fullName + ' ' + s.soldBy.username).toLowerCase().includes(search);
+        const itemsMatch = s.items.some(i => i.name.toLowerCase().includes(search));
+        const totalMatch = s.grandTotal.toString().includes(search);
+        return cashierMatch || itemsMatch || totalMatch;
+    });
+    
+    const tbody = document.getElementById('allSalesBody');
+    tbody.innerHTML = '';
+    if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">No sales found.</td></tr>';
+        return;
+    }
+    filtered.forEach((s, idx) => {
+        const summary = s.items.map(i => `${i.name} ×${i.quantity}`).join(', ');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><strong>#${allSalesData.length - allSalesData.indexOf(s)}</strong></td>
+            <td style="font-size:0.8rem;color:var(--muted)">${new Date(s.saleDate).toLocaleString()}</td>
+            <td><strong>${s.soldBy.fullName}</strong><br><small style="color:var(--muted)">${s.soldBy.username}</small></td>
+            <td style="max-width:260px;white-space:normal;font-size:0.78rem;color:var(--text-2)">${summary}</td>
+            <td><strong style="color:var(--success)">₱${s.grandTotal.toFixed(2)}</strong></td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+document.getElementById('salesSearchInput')?.addEventListener('input', renderAllSales);
 
 /* ── Logout ── */
 document.getElementById('logoutBtn').addEventListener('click', () => {
